@@ -117,16 +117,29 @@ export function BanquetBookingDialog({
         bookingType: "Banquet Hall",
       };
       
-      // Send booking data to API endpoint
-      const response = await fetch('/api/banquet-booking', {
+      // Send booking data to API endpoint with .js extension
+      const response = await fetch('/api/banquet-booking.js', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(banquetData),
+        body: JSON.stringify(values),
       });
 
-      const data = await response.json();
+      if (!response.ok) {
+        // Handle non-200 responses
+        const errorText = await response.text();
+        console.error(`API error (${response.status}):`, errorText);
+        throw new Error(`Server error (${response.status}). Please try again later.`);
+      }
+
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        console.error('Error parsing JSON response:', jsonError);
+        throw new Error('Invalid response from server. Please try again later.');
+      }
       
       if (data.success) {
         toast({

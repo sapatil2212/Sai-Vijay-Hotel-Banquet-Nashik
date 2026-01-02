@@ -9,8 +9,8 @@ interface ContactFormData {
 
 export const submitContactForm = async (formData: ContactFormData): Promise<{ success: boolean; message: string }> => {
   try {
-    // Send data to the integrated API endpoint
-    const response = await fetch('/api/contact', {
+    // Send data to the integrated API endpoint with .mjs extension
+    const response = await fetch('/api/contact.mjs', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -18,12 +18,29 @@ export const submitContactForm = async (formData: ContactFormData): Promise<{ su
       body: JSON.stringify(formData),
     });
 
-    const data = await response.json();
-    
-    return {
-      success: data.success,
-      message: data.message
-    };
+    if (!response.ok) {
+      // Handle non-200 responses
+      const errorText = await response.text();
+      console.error(`API error (${response.status}):`, errorText);
+      return {
+        success: false,
+        message: `Server error (${response.status}). Please try again later.`
+      };
+    }
+
+    try {
+      const data = await response.json();
+      return {
+        success: data.success,
+        message: data.message
+      };
+    } catch (jsonError) {
+      console.error('Error parsing JSON response:', jsonError);
+      return {
+        success: false,
+        message: 'Invalid response from server. Please try again later.'
+      };
+    }
   } catch (error) {
     console.error('Error submitting contact form:', error);
     return {
