@@ -1,0 +1,292 @@
+interface ContactFormData {
+  name: string;
+  email: string;
+  mobile: string;
+  enquiryType: string;
+  eventType?: string;
+  message: string;
+}
+
+// Guest email template
+export const guestEmailTemplate = (data: ContactFormData): string => {
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You for Contacting Hotel Sai Vijay</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .logo {
+      max-width: 180px;
+      height: auto;
+    }
+    .content {
+      padding: 20px 0;
+    }
+    h1 {
+      color: #1a365d;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .details {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 20px 0;
+    }
+    .details p {
+      margin: 8px 0;
+    }
+    .details strong {
+      color: #1a365d;
+    }
+    .footer {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 2px solid #f0f0f0;
+      font-size: 14px;
+      color: #666;
+    }
+    .social-links {
+      margin: 15px 0;
+    }
+    .social-links a {
+      display: inline-block;
+      margin: 0 8px;
+      text-decoration: none;
+    }
+    .social-icon {
+      width: 32px;
+      height: 32px;
+    }
+    .contact-info {
+      margin: 15px 0;
+      font-size: 14px;
+      color: #555;
+    }
+    .contact-info p {
+      margin: 5px 0;
+    }
+    .cta-button {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #1a365d;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="https://i.ibb.co/Qp1SXBt/logo.png" alt="Hotel Sai Vijay Logo" class="logo">
+    </div>
+    
+    <div class="content">
+      <h1>Thank You for Contacting Us!</h1>
+      
+      <p>Dear ${data.name},</p>
+      
+      <p>Thank you for reaching out to Hotel Sai Vijay. We have received your enquiry and our team will get back to you within 24 hours.</p>
+      
+      <div class="details">
+        <p><strong>Date:</strong> ${currentDate}</p>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Phone:</strong> ${data.mobile}</p>
+        <p><strong>Enquiry Type:</strong> ${data.enquiryType}</p>
+        ${data.eventType ? `<p><strong>Event Type:</strong> ${data.eventType}</p>` : ''}
+        ${data.message ? `<p><strong>Message:</strong> ${data.message}</p>` : ''}
+      </div>
+      
+      <p>If you have any urgent queries, please feel free to contact us directly:</p>
+      
+      <div class="contact-info">
+        <p>📞 <strong>Phone:</strong> +91 91300 70701</p>
+        <p>📧 <strong>Email:</strong> saivijaynashik@gmail.com</p>
+        <p>📍 <strong>Address:</strong> Office, Ground Floor, Shree Hari Plaza, Abhang Nagar, New Adgaon Naka, Panchavati, Nashik, Maharashtra 422003</p>
+      </div>
+      
+      <div style="text-align: center;">
+        <a href="https://hotelsaivijay.com" class="cta-button">Visit Our Website</a>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="social-links">
+        <a href="https://facebook.com/hotelsaivijay"><img src="https://i.ibb.co/NyBWZNb/facebook.png" alt="Facebook" class="social-icon"></a>
+        <a href="https://instagram.com/hotelsaivijay"><img src="https://i.ibb.co/zrXfL1s/instagram.png" alt="Instagram" class="social-icon"></a>
+        <a href="https://wa.me/919130070701"><img src="https://i.ibb.co/Lkn7rkG/whatsapp.png" alt="WhatsApp" class="social-icon"></a>
+      </div>
+      
+      <p>&copy; ${new Date().getFullYear()} Hotel Sai Vijay. All rights reserved.</p>
+      <p>This is an automated message, please do not reply to this email.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+};
+
+// Admin email template
+export const adminEmailTemplate = (data: ContactFormData): string => {
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Enquiry from Website</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background-color: #1a365d;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px 8px 0 0;
+      text-align: center;
+    }
+    .content {
+      padding: 20px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+    .alert-icon {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+    .enquiry-details {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 20px 0;
+      border-left: 4px solid #1a365d;
+    }
+    .enquiry-details p {
+      margin: 8px 0;
+    }
+    .enquiry-details strong {
+      color: #1a365d;
+    }
+    .footer {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid #f0f0f0;
+      font-size: 14px;
+      color: #666;
+    }
+    .action-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #1a365d;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      margin: 10px 5px;
+    }
+    .priority-tag {
+      display: inline-block;
+      padding: 4px 8px;
+      background-color: #ff6b6b;
+      color: white;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1><span class="alert-icon">🔔</span> New Enquiry Received</h1>
+    </div>
+    
+    <div class="content">
+      <p>A new enquiry has been submitted through the website contact form.</p>
+      
+      <div class="enquiry-details">
+        <p><strong>Date & Time:</strong> ${currentDate}</p>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Phone:</strong> ${data.mobile}</p>
+        <p><strong>Enquiry Type:</strong> ${data.enquiryType} ${data.enquiryType === 'Banquet' ? '<span class="priority-tag">PRIORITY</span>' : ''}</p>
+        ${data.eventType ? `<p><strong>Event Type:</strong> ${data.eventType}</p>` : ''}
+        ${data.message ? `<p><strong>Message:</strong> ${data.message}</p>` : ''}
+      </div>
+      
+      <div style="text-align: center;">
+        <a href="tel:${data.mobile}" class="action-button">Call Customer</a>
+        <a href="https://wa.me/${data.mobile.replace(/[^0-9]/g, '')}" class="action-button" style="background-color: #25D366;">WhatsApp</a>
+        <a href="mailto:${data.email}" class="action-button" style="background-color: #4285F4;">Reply by Email</a>
+      </div>
+      
+      <p style="margin-top: 20px;"><strong>Note:</strong> Please respond to this enquiry within 24 hours for optimal customer satisfaction.</p>
+    </div>
+    
+    <div class="footer">
+      <p>This is an automated notification from your website contact form.</p>
+      <p>&copy; ${new Date().getFullYear()} Hotel Sai Vijay</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+};
