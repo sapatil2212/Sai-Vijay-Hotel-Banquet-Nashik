@@ -9,8 +9,8 @@ interface ContactFormData {
 
 export const submitContactForm = async (formData: ContactFormData): Promise<{ success: boolean; message: string }> => {
   try {
-    // Send data to the integrated API endpoint with .mjs extension
-    const response = await fetch('/api/contact.mjs', {
+    // Send data to the integrated API endpoint
+    const response = await fetch('/api/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

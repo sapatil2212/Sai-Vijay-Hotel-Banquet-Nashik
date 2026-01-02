@@ -117,8 +117,8 @@ export function BanquetBookingDialog({
         bookingType: "Banquet Hall",
       };
       
-      // Send booking data to API endpoint with .js extension
-      const response = await fetch('/api/banquet-booking.js', {
+      // Send booking data to API endpoint
+      const response = await fetch('/api/banquet-booking', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

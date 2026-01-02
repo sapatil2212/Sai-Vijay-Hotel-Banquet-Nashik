@@ -90,8 +90,8 @@ export function BookingDialog({
     setIsSubmitting(true);
     
     try {
-      // Send booking data to API endpoint with .js extension
-      const response = await fetch('/api/booking.js', {
+      // Send booking data to API endpoint
+      const response = await fetch('/api/booking', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
