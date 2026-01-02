@@ -1,6 +1,33 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-import fetch from 'node-fetch';
+
+// Use dynamic import for node-fetch to handle environments where it might not be available
+let fetch;
+try {
+  // Try to use native fetch if available (Node.js 18+)
+  if (typeof globalThis.fetch === 'function') {
+    fetch = globalThis.fetch;
+    console.log('Using native fetch');
+  } else {
+    // Fallback to node-fetch
+    const module = await import('node-fetch');
+    fetch = module.default;
+    console.log('Using node-fetch module');
+  }
+} catch (error) {
+  console.error('Failed to import fetch:', error);
+  // Create a simple fetch polyfill that logs the error
+  fetch = async (url, options) => {
+    console.error('Fetch is not available, cannot make request to:', url);
+    return {
+      ok: false,
+      status: 500,
+      statusText: 'Fetch not available',
+      json: async () => ({ error: 'Fetch not available' }),
+      text: async () => 'Fetch not available'
+    };
+  };
+}
 
 // Load environment variables
 dotenv.config();
