@@ -4,15 +4,19 @@
 // Vercel Node.js 18+ has native fetch
 
 // Create email transporter
-const transporter = nodemailer.createTransport({
+let _transporter = null;
+function getTransporter() { if (!_transporter) { _transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: parseInt(process.env.EMAIL_PORT || '587'),
   secure: false, // true for 465, false for other ports
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
-  },
-});
+      },
+    });
+  }
+  return _transporter;
+}
 
 // Guest email template
 const guestEmailTemplate = (data) => {
@@ -308,7 +312,7 @@ const sendGuestEmail = async (formData) => {
       html: guestEmailTemplate(formData),
     };
 
-    await transporter.sendMail(mailOptions);
+    await getTransporter().sendMail(mailOptions);
     return true;
   } catch (error) {
     console.error('Error sending guest email:', error);
@@ -327,7 +331,7 @@ const sendAdminEmail = async (formData) => {
       html: adminEmailTemplate(formData),
     };
 
-    await transporter.sendMail(mailOptions);
+    await getTransporter().sendMail(mailOptions);
     return true;
   } catch (error) {
     console.error('Error sending admin email:', error);
@@ -461,4 +465,6 @@ module.exports = async function handler(req, res) {
     });
   }
 }
+
+
 
