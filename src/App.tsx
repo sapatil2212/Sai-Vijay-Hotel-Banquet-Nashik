@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollRestoration from "./components/layout/ScrollRestoration";
 import FloatingActions from "./components/layout/FloatingActions";
 import Index from "./pages/Index";
+import Home from "./pages/Home";
 import About from "./pages/About";
 import Rooms from "./pages/Rooms";
 import Banquet from "./pages/Banquet";
@@ -25,6 +26,7 @@ const App = () => (
         <FloatingActions />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/rooms" element={<Rooms />} />
           <Route path="/banquet" element={<Banquet />} />

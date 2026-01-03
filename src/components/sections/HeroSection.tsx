@@ -4,30 +4,40 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Users, Calendar as CalendarIcon, ArrowRight, Minus, Plus, Phone } from "lucide-react";
+import { Users, Calendar as CalendarIcon, ArrowRight, Minus, Plus, Phone, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
-import heroLobby from "@/assets/banquet/banquet2.png";
-import roomDeluxe from "@/assets/rooms/room1.png";
-import banquetWedding from "@/assets/banquet/banquet.png";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import type { DateRange } from "react-day-picker";
 
+// Desktop hero images
+import heroLobby from "@/assets/hero/hero_1.webp";
+import heroRooms from "@/assets/hero/hero_2.webp";
+import heroDining from "@/assets/hero/hero_3.webp";
+
+// Mobile hero images
+import heroLobbyMobile from "@/assets/hero/hero_1_mobile.png";
+import heroRoomsMobile from "@/assets/hero/hero_2_mobile.png";
+import heroDiningMobile from "@/assets/hero/hero_3_mobile.png";
+
 const slides = [
   {
-    image: heroLobby,
-    title: "Where Grandeur Meets Celebration",
-    subtitle: "An elegant banquet hall designed for grand weddings and memorable celebrations.",
+    desktopImage: heroLobby,
+    mobileImage: heroLobbyMobile,
+    title: "Where Every Door Opens to Luxury",
+    subtitle: "From the moment you step inside, feel the warmth of personalized service"
   },
   {
-    image: roomDeluxe,
-    title: "Luxury Rooms Crafted for Comfort & Calm",
-    subtitle: "Thoughtfully designed rooms offering modern amenities, peaceful ambiance, and 24/7 comfort for every guest.",
+    desktopImage: heroRooms,
+    mobileImage: heroRoomsMobile,
+    title: "Your dream event deserves a royal venue",
+    subtitle: "Spacious and equipped with modern amenities, our banquet hall is ready to host your happiest moments"
   },
   {
-    image: banquetWedding,
-    title: "An Elegant Banquet for Grand Celebrations",
-    subtitle: "A perfect venue for weddings, receptions, and corporate events—where every celebration feels royal.",
+    desktopImage: heroDining,
+    mobileImage: heroDiningMobile,
+    title: "Exceptional Dining Experience",
+    subtitle: "Taste the finest cuisine at Maharana Thal"
   },
 ];
 
@@ -70,6 +80,7 @@ const HeroSection = () => {
       <div className="relative h-[100vh] min-h-[600px] flex items-center overflow-hidden bg-black">
         {/* Background Images with Black Fade Transition */}
         <AnimatePresence mode="wait">
+
           <motion.div
             key={currentSlide}
             initial={{ opacity: 0 }}
@@ -78,25 +89,37 @@ const HeroSection = () => {
             transition={{ duration: 1.2 }}
             className="absolute inset-0"
           >
-           <img
-              src={slides[currentSlide].image}
-              alt={slides[currentSlide].title}
-              className="w-full h-full object-cover"
-            />
+            {/* Mobile Image (hidden on desktop) */}
+            <div className="md:hidden">
+              <img
+                src={slides[currentSlide].mobileImage}
+                alt={slides[currentSlide].title}
+                className="w-full h-full object-cover"
+              />
+            </div>
             
+            {/* Desktop Image (hidden on mobile) */}
+            <div className="hidden md:block">
+              <img
+                src={slides[currentSlide].desktopImage}
+                alt={slides[currentSlide].title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+              
           </motion.div>
         </AnimatePresence>
 
         {/* Content */}
-        <div className="relative z-20 pt-20 pl-4 sm:pl-6 lg:pl-40">
-          <div className="max-w-2xl text-left">
+        <div className="relative z-20 flex items-center justify-center md:justify-start h-full w-full">
+          <div className="max-w-3xl text-center md:text-left px-6 md:px-10 lg:pl-40 -mt-16 md:mt-0">
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="mb-3"
             >
-              <span className="inline-block text-accent text-xs tracking-[0.2em] uppercase font-medium">
+              <span className="inline-block text-accent text-xs md:text-sm tracking-[0.2em] uppercase font-medium bg-black/30 px-4 py-1 rounded-full">
                 Welcome to Sai Vijay
               </span>
             </motion.div>
@@ -109,11 +132,11 @@ const HeroSection = () => {
                 exit={{ opacity: 0, y: 30 }}
                 transition={{ duration: 0.6 }}
               >
-               <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-primary-foreground leading-tight mb-4">
-  {slides[currentSlide].title}
-</h1>
+                <h1 className="text-2xl md:text-4xl lg:text-5xl font-semibold text-primary-foreground leading-tight mb-3 md:mb-5 mx-auto md:mx-0 drop-shadow-lg">
+                  {slides[currentSlide].title}
+                </h1>
 
-                <p className="text-primary-foreground/80 text-base md:text-lg max-w-lg leading-relaxed mb-6">
+                <p className="text-sm md:text-lg text-primary-foreground/90 max-w-2xl leading-relaxed mb-6 md:mb-8 mx-auto md:mx-0 drop-shadow-md">
                   {slides[currentSlide].subtitle}
                 </p>
               </motion.div>
@@ -126,21 +149,21 @@ const HeroSection = () => {
             >
               <Button variant="heroShimmer" size="lg" asChild>
                 <Link to="/contact" className="inline-flex items-center gap-2">
-                  <ArrowRight className="w-4 h-4" />
                   Book Now
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
               </Button>
             </motion.div>
 
             {/* Slide Indicators */}
-            <div className="flex items-center gap-3 mt-8">
+            <div className="flex items-center justify-center md:justify-start gap-3 mt-10">
               {slides.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
                   className={`h-2 rounded-full transition-all duration-300 ${
                     index === currentSlide
-                      ? "bg-accent w-8"
+                      ? "bg-accent w-10 shadow-glow"
                       : "bg-primary-foreground/40 w-2 hover:bg-primary-foreground/60"
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
