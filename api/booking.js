@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { format } from 'date-fns';
 
 function createTransporter() {
   return nodemailer.createTransport({
@@ -49,9 +50,9 @@ export default async function handler(req, res) {
 
     const transporter = createTransporter();
 
-    // Use the dates directly as provided by the form
-    const checkInDate = bookingData.checkIn || 'Not specified';
-    const checkOutDate = bookingData.checkOut || 'Not specified';
+    // Format dates from the form
+    const checkInDate = bookingData.checkInDate ? format(new Date(bookingData.checkInDate), 'yyyy-MM-dd') : 'Not specified';
+    const checkOutDate = bookingData.checkOutDate ? format(new Date(bookingData.checkOutDate), 'yyyy-MM-dd') : 'Not specified';
 
     // Send email to admin
     const adminHtml = `
