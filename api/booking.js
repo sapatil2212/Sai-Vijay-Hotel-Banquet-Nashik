@@ -49,15 +49,15 @@ export default async function handler(req, res) {
 
     const transporter = createTransporter();
 
-    // Format check-in/check-out dates if available
-    const checkInDate = bookingData.checkIn ? new Date(bookingData.checkIn).toLocaleDateString() : 'Not specified';
-    const checkOutDate = bookingData.checkOut ? new Date(bookingData.checkOut).toLocaleDateString() : 'Not specified';
+    // Use the dates directly as provided by the form
+    const checkInDate = bookingData.checkIn || 'Not specified';
+    const checkOutDate = bookingData.checkOut || 'Not specified';
 
     // Send email to admin
     const adminHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd;">
         <div style="text-align: center; margin-bottom: 20px;">
-          <img src="https://i.ibb.co/Qp1SXBt/logo.png" alt="Hotel Sai Vijay" style="max-width: 200px;">
+          <img src="https://sai-vijay-hotel-banquet-nashik.github.io/src/assets/favicon.png" alt="Hotel Sai Vijay" style="max-width: 200px;">
         </div>
         <h2 style="color: #1a365d;">New Room Booking Request</h2>
         <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px;">
@@ -85,7 +85,7 @@ export default async function handler(req, res) {
     const guestHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd;">
         <div style="text-align: center; margin-bottom: 20px;">
-          <img src="https://i.ibb.co/Qp1SXBt/logo.png" alt="Hotel Sai Vijay" style="max-width: 200px;">
+          <img src="https://raw.githubusercontent.com/sapatil2212/Sai-Vijay-Hotel-Banquet-Nashik/master/src/assets/favicon.png" alt="Hotel Sai Vijay" style="max-width: 200px;">
         </div>
         <h2 style="color: #1a365d;">Thank You for Your Booking Request</h2>
         <p>Dear ${bookingData.name},</p>
