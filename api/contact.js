@@ -1,36 +1,7 @@
-import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
+﻿const nodemailer = require('nodemailer');
 
-// Use dynamic import for node-fetch to handle environments where it might not be available
-let fetch;
-try {
-  // Try to use native fetch if available (Node.js 18+)
-  if (typeof globalThis.fetch === 'function') {
-    fetch = globalThis.fetch;
-    console.log('Using native fetch');
-  } else {
-    // Fallback to node-fetch
-    const module = await import('node-fetch');
-    fetch = module.default;
-    console.log('Using node-fetch module');
-  }
-} catch (error) {
-  console.error('Failed to import fetch:', error);
-  // Create a simple fetch polyfill that logs the error
-  fetch = async (url, options) => {
-    console.error('Fetch is not available, cannot make request to:', url);
-    return {
-      ok: false,
-      status: 500,
-      statusText: 'Fetch not available',
-      json: async () => ({ error: 'Fetch not available' }),
-      text: async () => 'Fetch not available'
-    };
-  };
-}
 
-// Load environment variables
-dotenv.config();
+// Vercel Node.js 18+ has native fetch
 
 // Create email transporter
 const transporter = nodemailer.createTransport({
@@ -169,9 +140,9 @@ const guestEmailTemplate = (data) => {
       <p>If you have any urgent queries, please feel free to contact us directly:</p>
       
       <div class="contact-info">
-        <p>📞 <strong>Phone:</strong> +91 91300 70701</p>
-        <p>📧 <strong>Email:</strong> saivijaynashik@gmail.com</p>
-        <p>📍 <strong>Address:</strong> Office, Ground Floor, Shree Hari Plaza, Abhang Nagar, New Adgaon Naka, Panchavati, Nashik, Maharashtra 422003</p>
+        <p>ðŸ“ž <strong>Phone:</strong> +91 91300 70701</p>
+        <p>ðŸ“§ <strong>Email:</strong> saivijaynashik@gmail.com</p>
+        <p>ðŸ“ <strong>Address:</strong> Office, Ground Floor, Shree Hari Plaza, Abhang Nagar, New Adgaon Naka, Panchavati, Nashik, Maharashtra 422003</p>
       </div>
       
       <div style="text-align: center;">
@@ -292,7 +263,7 @@ const adminEmailTemplate = (data) => {
 <body>
   <div class="container">
     <div class="header">
-      <h1><span class="alert-icon">🔔</span> New Enquiry Received</h1>
+      <h1><span class="alert-icon">ðŸ””</span> New Enquiry Received</h1>
     </div>
     
     <div class="content">
@@ -418,7 +389,7 @@ const sendToGoogleSheet = async (formData) => {
 };
 
 // API endpoint handler
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -490,3 +461,4 @@ export default async function handler(req, res) {
     });
   }
 }
+
