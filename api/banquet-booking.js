@@ -1,4 +1,17 @@
-// API handler for banquet hall bookings
+import nodemailer from 'nodemailer';
+
+function createTransporter() {
+  return nodemailer.createTransport({
+    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.EMAIL_PORT || '587'),
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+}
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -20,7 +33,6 @@ export default async function handler(req, res) {
   }
   
   try {
-
     const bookingData = req.body;
     console.log('Banquet booking request received:', bookingData);
     
@@ -35,11 +47,71 @@ export default async function handler(req, res) {
       });
     }
 
-    // Return success response for now
-    // In a real implementation, you would process the booking here
+    const transporter = createTransporter();
+
+    // Format event date if available
+    const eventDate = bookingData.eventDate ? new Date(bookingData.eventDate).toLocaleDateString() : 'Not specified';
+
+    // Send email to admin
+    const adminHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <img src="https://i.ibb.co/Qp1SXBt/logo.png" alt="Hotel Sai Vijay" style="max-width: 200px;">
+        </div>
+        <h2 style="color: #1a365d;">New Banquet Booking Request</h2>
+        <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px;">
+          <p><strong>Name:</strong> ${bookingData.name}</p>
+          <p><strong>Email:</strong> ${bookingData.email}</p>
+          <p><strong>Contact:</strong> ${bookingData.contactNo}</p>
+          <p><strong>Event Type:</strong> ${bookingData.eventType}</p>
+          <p><strong>Guests:</strong> ${bookingData.guests}</p>
+          <p><strong>Event Date:</strong> ${eventDate}</p>
+          <p><strong>Special Requests:</strong> ${bookingData.specialRequests || 'None'}</p>
+        </div>
+      </div>
+    `;
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+      to: process.env.EMAIL_USER,
+      bcc: process.env.EMAIL_BCC,
+      subject: `Banquet Booking Request: ${bookingData.eventType} for ${bookingData.name}`,
+      html: adminHtml
+    });
+
+    // Send confirmation to guest
+    const guestHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <img src="https://i.ibb.co/Qp1SXBt/logo.png" alt="Hotel Sai Vijay" style="max-width: 200px;">
+        </div>
+        <h2 style="color: #1a365d;">Thank You for Your Banquet Booking Request</h2>
+        <p>Dear ${bookingData.name},</p>
+        <p>We have received your banquet hall booking request for <strong>${bookingData.eventType}</strong>.</p>
+        <p>Our team will contact you shortly to confirm availability and discuss your requirements in detail.</p>
+        <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+          <p><strong>Booking Details:</strong></p>
+          <p>Event Type: ${bookingData.eventType}</p>
+          <p>Guests: ${bookingData.guests}</p>
+          <p>Event Date: ${eventDate}</p>
+        </div>
+        <p>If you have any questions, please contact us at:</p>
+        <p>📞 Phone: +91 91300 70701</p>
+        <p>📧 Email: saivijaynashik@gmail.com</p>
+        <p>Best Regards,<br>Hotel Sai Vijay Team</p>
+      </div>
+    `;
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+      to: bookingData.email,
+      subject: 'Your Banquet Booking Request - Hotel Sai Vijay',
+      html: guestHtml
+    });
+
     return res.status(200).json({
       success: true,
-      message: 'Banquet booking request received successfully'
+      message: 'Banquet booking request received successfully. We will contact you shortly.'
     });
   } catch (error) {
     console.error('Error processing banquet booking request:', error);

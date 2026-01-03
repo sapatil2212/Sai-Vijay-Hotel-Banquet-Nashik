@@ -252,7 +252,7 @@ const Contact = () => {
 
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    Message <span className="text-red-500">*</span>
+                    Message
                   </label>
                   <Textarea
                     id="message"
@@ -261,7 +261,6 @@ const Contact = () => {
                     onChange={handleChange}
                     placeholder="Tell us about your requirements..."
                     rows={4}
-                    required
                     className="border-gray-300 focus:border-primary focus:ring-primary resize-none"
                   />
                 </div>
