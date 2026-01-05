@@ -28,6 +28,17 @@ const eventTypes = [
   "Other"
 ];
 
+const roomTypes = [
+  "Deluxe Room",
+  "Executive",
+  "Suite"
+];
+
+const occupancyTypes = [
+  "Single",
+  "Double"
+];
+
 const contactInfo = [
   {
     icon: Phone,
@@ -59,6 +70,8 @@ const Contact = () => {
     mobile: "",
     enquiryType: "",
     eventType: "",
+    roomType: "",
+    occupancyType: "",
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -69,9 +82,37 @@ const Contact = () => {
 
   const handleSelectChange = (name: string, value: string) => {
     setFormData({ ...formData, [name]: value });
-    // Reset event type if enquiry type changes and is not Banquet
-    if (name === "enquiryType" && value !== "Banquet") {
-      setFormData(prev => ({ ...prev, enquiryType: value, eventType: "" }));
+    
+    // Handle enquiry type changes
+    if (name === "enquiryType") {
+      if (value === "Banquet") {
+        // Reset room-related fields if Banquet is selected
+        setFormData(prev => ({ 
+          ...prev, 
+          enquiryType: value, 
+          eventType: "",
+          roomType: "",
+          occupancyType: ""
+        }));
+      } else if (value === "Rooms") {
+        // Reset event type if Rooms is selected
+        setFormData(prev => ({ 
+          ...prev, 
+          enquiryType: value, 
+          eventType: "",
+          roomType: "",
+          occupancyType: ""
+        }));
+      } else {
+        // Reset all conditional fields for other enquiry types
+        setFormData(prev => ({ 
+          ...prev, 
+          enquiryType: value, 
+          eventType: "",
+          roomType: "",
+          occupancyType: ""
+        }));
+      }
     }
   };
 
@@ -97,7 +138,16 @@ const Contact = () => {
         });
         
         // Reset form
-        setFormData({ name: "", email: "", mobile: "", enquiryType: "", eventType: "", message: "" });
+        setFormData({ 
+          name: "", 
+          email: "", 
+          mobile: "", 
+          enquiryType: "", 
+          eventType: "", 
+          roomType: "", 
+          occupancyType: "", 
+          message: "" 
+        });
       } else {
         toast({
           title: "Submission Error",
@@ -256,6 +306,54 @@ const Contact = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                )}
+                
+                {formData.enquiryType === "Rooms" && (
+                  <>
+                    <div>
+                      <label htmlFor="roomType" className="block text-sm font-medium text-gray-700 mb-2">
+                        Room Type <span className="text-red-500">*</span>
+                      </label>
+                      <Select
+                        value={formData.roomType}
+                        onValueChange={(value) => handleSelectChange("roomType", value)}
+                        required
+                      >
+                        <SelectTrigger className="border-gray-300 focus:border-primary focus:ring-primary">
+                          <SelectValue placeholder="Select room type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {roomTypes.map((room) => (
+                            <SelectItem key={room} value={room}>
+                              {room}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="occupancyType" className="block text-sm font-medium text-gray-700 mb-2">
+                        Occupancy Type <span className="text-red-500">*</span>
+                      </label>
+                      <Select
+                        value={formData.occupancyType}
+                        onValueChange={(value) => handleSelectChange("occupancyType", value)}
+                        required
+                      >
+                        <SelectTrigger className="border-gray-300 focus:border-primary focus:ring-primary">
+                          <SelectValue placeholder="Select occupancy type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {occupancyTypes.map((occupancy) => (
+                            <SelectItem key={occupancy} value={occupancy}>
+                              {occupancy}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </>
                 )}
 
                 <div>
