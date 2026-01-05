@@ -18,6 +18,16 @@ export function createEmailFooter(hotelInfo) {
         <img src="https://cdn-icons-png.flaticon.com/24/1384/1384060.png" alt="YouTube" style="width: 24px; height: 24px;">
       </a>
       
+      <!-- Twitter/X -->
+      <a href="${hotelInfo.social.twitter}" style="display: inline-block; margin: 0 8px; text-decoration: none;">
+        <img src="https://cdn-icons-png.flaticon.com/24/733/733579.png" alt="Twitter" style="width: 24px; height: 24px;">
+      </a>
+      
+      <!-- Pinterest -->
+      <a href="${hotelInfo.social.pinterest}" style="display: inline-block; margin: 0 8px; text-decoration: none;">
+        <img src="https://cdn-icons-png.flaticon.com/24/733/733558.png" alt="Pinterest" style="width: 24px; height: 24px;">
+      </a>
+      
       <!-- WhatsApp -->
       <a href="https://wa.me/${hotelInfo.phone1.replace(/[^0-9]/g, '')}" style="display: inline-block; margin: 0 8px; text-decoration: none;">
         <img src="https://cdn-icons-png.flaticon.com/24/733/733585.png" alt="WhatsApp" style="width: 24px; height: 24px;">

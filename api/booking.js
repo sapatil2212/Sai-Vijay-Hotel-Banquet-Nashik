@@ -14,7 +14,9 @@ const HOTEL_INFO = {
   social: {
     facebook: 'https://www.facebook.com/saivijayhotels',
     instagram: 'https://www.instagram.com/saivijayhotelsandbanquet',
-    youtube: 'https://www.youtube.com/@saivijay-hotelsbanquet5348'
+    youtube: 'https://www.youtube.com/@saivijay-hotelsbanquet5348',
+    twitter: 'https://x.com/saivijayhotels',
+    pinterest: 'https://www.pinterest.com/saivijayhotels'
   }
 };
 
