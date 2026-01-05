@@ -1,4 +1,4 @@
-﻿import nodemailer from 'nodemailer';
+import nodemailer from 'nodemailer';
 
 // Hotel contact information
 const HOTEL_INFO = {
@@ -65,11 +65,23 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, email, mobile, enquiryType, eventType, message } = req.body;
+    const { name, email, mobile, enquiryType, eventType, roomType, occupancyType, message } = req.body;
 
     if (!name || !email || !mobile || !enquiryType) {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
+    
+    // Log the received data for debugging
+    console.log('Contact form data received:', {
+      name,
+      email,
+      mobile,
+      enquiryType,
+      eventType,
+      roomType,
+      occupancyType,
+      message
+    });
 
     const transporter = createTransporter();
 
@@ -87,6 +99,8 @@ export default async function handler(req, res) {
             <p style="margin: 10px 0; color: #444;"><strong>Mobile:</strong> ${mobile}</p>
             <p style="margin: 10px 0; color: #444;"><strong>Enquiry Type:</strong> ${enquiryType}</p>
             ${eventType ? `<p style="margin: 10px 0; color: #444;"><strong>Event Type:</strong> ${eventType}</p>` : ''}
+            ${roomType ? `<p style="margin: 10px 0; color: #444;"><strong>Room Type:</strong> ${roomType}</p>` : ''}
+            ${occupancyType ? `<p style="margin: 10px 0; color: #444;"><strong>Occupancy Type:</strong> ${occupancyType}</p>` : ''}
             <p style="margin: 10px 0; color: #444;"><strong>Message:</strong> ${message || 'Not provided'}</p>
           </div>
         </div>
