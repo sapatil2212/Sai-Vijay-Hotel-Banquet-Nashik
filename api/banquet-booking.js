@@ -63,7 +63,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, message: `Missing required fields: ${missingFields.join(', ')}` });
     }
 
-    const transporter = createTransporter();
+    // Using centralized email configuration from email-config.js
 
     const fromDate = bookingData.fromDate ? format(new Date(bookingData.fromDate), 'dd MMM yyyy') : 'Not specified';
     const toDate = bookingData.toDate ? format(new Date(bookingData.toDate), 'dd MMM yyyy') : 'Not specified';
