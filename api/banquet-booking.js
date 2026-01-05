@@ -184,24 +184,37 @@ export default async function handler(req, res) {
       </div>
     `;
 
-    console.log('Sending admin email...');
-    await transporter.sendMail({
+    console.log('Sending admin email to:', process.env.EMAIL_USER);
+    console.log('BCC:', process.env.EMAIL_BCC);
+    console.log('FROM:', process.env.EMAIL_FROM || process.env.EMAIL_USER);
+    
+    const adminResult = await transporter.sendMail({
       from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
       to: process.env.EMAIL_USER,
       bcc: process.env.EMAIL_BCC,
       subject: `Banquet Booking: ${bookingData.eventType} - ${bookingData.name} (${bookingData.guests} guests)`,
       html: adminHtml
     });
-    console.log('Admin email sent');
+    console.log('Admin email result:', {
+      messageId: adminResult.messageId,
+      accepted: adminResult.accepted,
+      rejected: adminResult.rejected,
+      response: adminResult.response
+    });
 
     console.log('Sending guest email to:', bookingData.email);
-    await transporter.sendMail({
+    const guestResult = await transporter.sendMail({
       from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
       to: bookingData.email,
       subject: `Your ${bookingData.eventType} Booking Request - ${HOTEL_INFO.name}`,
       html: guestHtml
     });
-    console.log('Guest email sent');
+    console.log('Guest email result:', {
+      messageId: guestResult.messageId,
+      accepted: guestResult.accepted,
+      rejected: guestResult.rejected,
+      response: guestResult.response
+    });
 
     return res.status(200).json({
       success: true,

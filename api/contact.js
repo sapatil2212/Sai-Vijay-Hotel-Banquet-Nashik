@@ -194,6 +194,9 @@ export default async function handler(req, res) {
     // Send email to admin with BCC
     try {
       console.log('Sending admin email to:', process.env.EMAIL_USER);
+      console.log('BCC:', process.env.EMAIL_BCC);
+      console.log('FROM:', process.env.EMAIL_FROM || process.env.EMAIL_USER);
+      
       const adminResult = await transporter.sendMail({
         from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
         to: process.env.EMAIL_USER,
@@ -201,10 +204,16 @@ export default async function handler(req, res) {
         subject: `New Enquiry: ${enquiryType} from ${name}`,
         html: adminHtml
       });
-      console.log('Admin email sent:', adminResult.messageId);
+      console.log('Admin email result:', {
+        messageId: adminResult.messageId,
+        accepted: adminResult.accepted,
+        rejected: adminResult.rejected,
+        response: adminResult.response
+      });
       adminEmailSent = true;
     } catch (adminError) {
       console.error('Failed to send admin email:', adminError.message);
+      console.error('Admin email error stack:', adminError.stack);
     }
 
     // Send confirmation to guest
@@ -216,10 +225,16 @@ export default async function handler(req, res) {
         subject: `Thank You for Contacting ${HOTEL_INFO.name}`,
         html: guestHtml
       });
-      console.log('Guest email sent:', guestResult.messageId);
+      console.log('Guest email result:', {
+        messageId: guestResult.messageId,
+        accepted: guestResult.accepted,
+        rejected: guestResult.rejected,
+        response: guestResult.response
+      });
       guestEmailSent = true;
     } catch (guestError) {
       console.error('Failed to send guest email:', guestError.message);
+      console.error('Guest email error stack:', guestError.stack);
     }
 
     // Close the transporter
