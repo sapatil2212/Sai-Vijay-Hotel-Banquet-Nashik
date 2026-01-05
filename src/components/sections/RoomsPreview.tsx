@@ -8,6 +8,9 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import deluxe1 from "@/assets/deluxe/1.webp";
 import deluxe2 from "@/assets/deluxe/2.webp";
 import deluxe3 from "@/assets/deluxe/3.webp";
+import executive1 from "@/assets/premium/premium_1.webp";
+import executive2 from "@/assets/premium/premium_2.webp";
+import executive3 from "@/assets/premium/premium_3.webp";
 import suite1 from "@/assets/suites/2.jpg";
 import suite2 from "@/assets/suites/5.webp";
 import suite3 from "@/assets/suites/6.webp";
@@ -15,12 +18,12 @@ import suite3 from "@/assets/suites/6.webp";
 const rooms = [
   {
     id: 1,
-    slug: 'deluxe-double-room',
-    name: 'Deluxe Double Room',
+    slug: 'deluxe-room',
+    name: 'Deluxe Room',
     images: [deluxe1, deluxe2, deluxe3],
     size: '213 sq ft',
     bed: '1 Queen Bed',
-    bathroom: '20 Private Bathrooms',
+    bathroom: 'Private Bathroom',
     maxGuests: 'Sleeps 3',
     amenities: {
       popular: [
@@ -44,12 +47,41 @@ const rooms = [
   },
   {
     id: 2,
-    slug: 'premium-suite',
-    name: 'Premium Suite',
+    slug: 'executive-room',
+    name: 'Executive',
+    images: [executive1, executive2, executive3],
+    size: '250 sq ft',
+    bed: '1 King Bed',
+    bathroom: 'Private Bathroom',
+    maxGuests: 'Sleeps 3',
+    amenities: {
+      popular: [
+        { icon: Wind, text: 'Air Conditioning' },
+        { icon: Wifi, text: 'Free WiFi' },
+        { icon: Tv, text: '42" LED TV' }
+      ],
+      features: [
+        { icon: Bed, text: 'Premium Mattress' },
+        { icon: DoorOpen, text: 'Premium View' },
+        { icon: Armchair, text: 'Work Desk' }
+      ],
+      media: [
+        { icon: Tv, text: 'Premium Channels' }
+      ],
+      bathroom: [
+        { icon: Bath, text: 'Rainfall Showerhead' },
+        { icon: Droplets, text: 'Premium Toiletries' }
+      ]
+    }
+  },
+  {
+    id: 3,
+    slug: 'suite',
+    name: 'Suite',
     images: [suite1, suite2, suite3],
     size: '300 sq ft',
     bed: '1 King Bed',
-    bathroom: '20 Private Bathrooms',
+    bathroom: 'Private Bathroom',
     maxGuests: 'Sleeps 4',
     amenities: {
       popular: [
@@ -129,7 +161,7 @@ const RoomsPreview = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6 max-w-7xl mx-auto">
             {rooms.map((room, index) => (
               <motion.div
                 key={room.id}

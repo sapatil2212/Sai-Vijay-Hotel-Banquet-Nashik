@@ -373,18 +373,19 @@ const Contact = () => {
 
                 <Button
                   type="submit"
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg flex items-center justify-center gap-2"
+                  className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-medium py-3 rounded-lg flex items-center justify-center gap-2 relative overflow-hidden group transition-all duration-300"
                   disabled={isSubmitting}
                 >
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-20 group-hover:animate-shimmer"></span>
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Sending...
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin relative z-10" />
+                      <span className="relative z-10">Sending...</span>
                     </>
                   ) : (
                     <>
-                      <Send className="w-5 h-5" />
-                      Send Message
+                      <Send className="w-5 h-5 relative z-10" />
+                      <span className="relative z-10">Send Message</span>
                     </>
                   )}
                 </Button>

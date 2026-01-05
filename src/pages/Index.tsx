@@ -6,6 +6,7 @@ import AboutPreview from "@/components/sections/AboutPreview";
 import VideoSection from "@/components/sections/VideoSection";
 import RoomsPreview from "@/components/sections/RoomsPreview";
 import BanquetHighlight from "@/components/sections/BanquetHighlight";
+import BanquetHalls from "@/components/sections/BanquetHalls";
 import BanquetGallery from "@/components/sections/BanquetGallery";
 import AmenitiesSection from "@/components/sections/AmenitiesSection";
 import GalleryPreview from "@/components/sections/GalleryPreview";
@@ -21,7 +22,7 @@ const Index = () => {
       <VideoSection />
       <RoomsPreview />
       <AmenitiesSection />
-      
+      <BanquetHalls />
       <BanquetGallery />
       <GalleryPreview />
       <TestimonialsSection />
