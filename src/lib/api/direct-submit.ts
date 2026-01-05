@@ -15,11 +15,21 @@ const BANQUET_API_URL = '/api/banquet-booking';
  */
 export async function directContactSubmit(formData: any) {
   console.log('[DIRECT SUBMIT] Contact form submission');
+  
+  // Ensure eventType is explicitly included even if empty
   const enhancedData = {
     ...formData,
     formType: 'contact',
+    eventType: formData.eventType || '',
     timestamp: new Date().toISOString()
   };
+  
+  // Log the data to verify eventType is included
+  console.log('[DIRECT SUBMIT] Enhanced data:', {
+    ...enhancedData,
+    enquiryType: enhancedData.enquiryType,
+    eventType: enhancedData.eventType
+  });
   
   // Submit to both endpoints in parallel
   const [sheetResult, emailResult] = await Promise.all([

@@ -28,6 +28,11 @@ export default async function handler(req, res) {
   try {
     const formData = req.body;
     console.log('Form submission received:', formData);
+    
+    // Ensure eventType is preserved for contact forms
+    if (formData.enquiryType === 'Banquet' && formData.eventType) {
+      console.log('Processing Banquet enquiry with event type:', formData.eventType);
+    }
 
     // Ensure formType is set for proper categorization in the sheet
     if (!formData.formType) {
