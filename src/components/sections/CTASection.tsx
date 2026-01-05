@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Phone, MessageCircle } from "lucide-react";
+import { Phone, Mail } from "lucide-react";
 
 const CTASection = () => {
   return (
@@ -37,25 +38,20 @@ const CTASection = () => {
             our team is here to curate the perfect experience for you.
           </p>
 
-          {/* ✅ PERFECT BUTTON LAYOUT */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto">
-            <Button variant="hero" size="xl" className="w-full" asChild>
-              <a href="tel:+919876543210" className="flex items-center justify-center gap-2">
+          {/* Side by side buttons for all screen sizes */}
+          <div className="flex flex-row gap-4 justify-center max-w-md mx-auto">
+            <Button variant="hero" size="xl" className="flex-1" asChild>
+              <a href="tel:+918378064999" className="flex items-center justify-center gap-2">
                 <Phone className="w-5 h-5" />
                 Call Now
               </a>
             </Button>
 
-            <Button variant="heroOutline" size="xl" className="w-full" asChild>
-              <a
-                href="https://wa.me/919876543210"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2"
-              >
-                <MessageCircle className="w-5 h-5" />
-                WhatsApp
-              </a>
+            <Button variant="heroOutline" size="xl" className="flex-1" asChild>
+              <Link to="/contact" className="flex items-center justify-center gap-2">
+                <Mail className="w-5 h-5" />
+                Contact Us
+              </Link>
             </Button>
           </div>
         </motion.div>

@@ -32,22 +32,22 @@ const contactInfo = [
   {
     icon: Phone,
     title: "Phone",
-    details: ["+91 91300 70701"],
+    details: ["+91 83780 64999", "+91 83906 33999"],
   },
   {
     icon: FaWhatsapp,
     title: "WhatsApp",
-    details: ["+91 91300 70701"],
+    details: ["+91 83780 64999"],
   },
   {
     icon: Mail,
     title: "Email",
-    details: ["pyramidagroexports@gmail.com"],
+    details: ["saivijaynasik@gmail.com"],
   },
   {
     icon: MapPin,
     title: "Address",
-    details: ["Office, Ground Floor, Shree Hari Plaza,", "Abhang Nagar, New Adgaon Naka,", "Panchavati, Nashik, Maharashtra 422003"],
+    details: ["309, 1, Pathardi Phata, Near Taj Gateway,", "Next to Indoline Furniture, Ambad Link Road,", "Ambad, Nashik - 422 010"],
   },
 ];
 
@@ -303,7 +303,7 @@ const Contact = () => {
             >
               {/* Map with Fallback */}
               <MapFallback 
-                address="Office, Ground Floor, Shree Hari Plaza, Abhang Nagar, New Adgaon Naka, Panchavati, Nashik"
+                address="309, 1, Pathardi Phata, Near Taj Gateway, Next to Indoline Furniture, Ambad Link Road, Ambad, Nashik - 422 010"
                 title="Sai Vijay Hotel And Banquet Location"
                 className="rounded-2xl h-[350px]"
               />
