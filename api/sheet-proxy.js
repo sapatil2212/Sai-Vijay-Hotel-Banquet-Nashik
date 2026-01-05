@@ -33,7 +33,9 @@ export default async function handler(req, res) {
     }
 
     console.log('Sheet URL:', sheetUrl);
-    console.log('Request body:', JSON.stringify(req.body));
+    console.log('Request body:', JSON.stringify(req.body, null, 2));
+    console.log('Room Type:', req.body.roomType);
+    console.log('Occupancy Type:', req.body.occupancyType);
 
     // Make request to Google Apps Script
     const response = await fetch(sheetUrl, {
