@@ -1,68 +1,119 @@
 /**
- * Direct submission module that bypasses all other form submission code
- * This ensures that all form data goes to the correct Google Sheet URL
- * 
- * IMPORTANT: In production, we use a server-side proxy to avoid CORS issues
- * Google Apps Script redirects POST requests, which causes issues with browser fetch
+ * Direct submission module for form data
+ * Sends data to both Google Sheets (for storage) and Email API (for notifications)
  */
 
-// Use the server-side proxy endpoint for all form submissions
-// This avoids CORS issues and handles Google's redirect properly
-const CORRECT_URL = '/api/sheet-proxy';
+// API endpoints
+const SHEET_PROXY_URL = '/api/sheet-proxy';
+const CONTACT_API_URL = '/api/contact';
+const BOOKING_API_URL = '/api/booking';
+const BANQUET_API_URL = '/api/banquet-booking';
 
 /**
  * Direct contact form submission
- * This bypasses all other submission logic to ensure data goes to the correct URL
+ * Sends to both Google Sheets and Email API
  */
 export async function directContactSubmit(formData: any) {
-  console.log('[DIRECT SUBMIT] Contact form using URL:', CORRECT_URL);
-  return directSubmit({
+  console.log('[DIRECT SUBMIT] Contact form submission');
+  const enhancedData = {
     ...formData,
     formType: 'contact',
     timestamp: new Date().toISOString()
-  });
+  };
+  
+  // Submit to both endpoints in parallel
+  const [sheetResult, emailResult] = await Promise.all([
+    submitToSheet(enhancedData),
+    submitToEmailApi(CONTACT_API_URL, enhancedData)
+  ]);
+  
+  console.log('[DIRECT SUBMIT] Sheet result:', sheetResult);
+  console.log('[DIRECT SUBMIT] Email result:', emailResult);
+  
+  // Consider success if at least one succeeded
+  const success = sheetResult.success || emailResult.success;
+  
+  return {
+    success,
+    message: success 
+      ? 'Your message has been sent successfully!' 
+      : 'There was an issue submitting your form. Please try again.'
+  };
 }
 
 /**
  * Direct room booking submission
- * This bypasses all other submission logic to ensure data goes to the correct URL
+ * Sends to both Google Sheets and Email API
  */
 export async function directRoomSubmit(formData: any) {
-  console.log('[DIRECT SUBMIT] Room booking using URL:', CORRECT_URL);
-  return directSubmit({
+  console.log('[DIRECT SUBMIT] Room booking submission');
+  const enhancedData = {
     ...formData,
     formType: 'room',
     timestamp: new Date().toISOString()
-  });
+  };
+  
+  // Submit to both endpoints in parallel
+  const [sheetResult, emailResult] = await Promise.all([
+    submitToSheet(enhancedData),
+    submitToEmailApi(BOOKING_API_URL, enhancedData)
+  ]);
+  
+  console.log('[DIRECT SUBMIT] Sheet result:', sheetResult);
+  console.log('[DIRECT SUBMIT] Email result:', emailResult);
+  
+  const success = sheetResult.success || emailResult.success;
+  
+  return {
+    success,
+    message: success 
+      ? 'Your booking request has been received!' 
+      : 'There was an issue submitting your booking. Please try again.'
+  };
 }
 
 /**
  * Direct banquet booking submission
- * This bypasses all other submission logic to ensure data goes to the correct URL
+ * Sends to both Google Sheets and Email API
  */
 export async function directBanquetSubmit(formData: any) {
-  console.log('[DIRECT SUBMIT] Banquet booking using URL:', CORRECT_URL);
-  return directSubmit({
+  console.log('[DIRECT SUBMIT] Banquet booking submission');
+  const enhancedData = {
     ...formData,
     formType: 'banquet',
     timestamp: new Date().toISOString()
-  });
+  };
+  
+  // Submit to both endpoints in parallel
+  const [sheetResult, emailResult] = await Promise.all([
+    submitToSheet(enhancedData),
+    submitToEmailApi(BANQUET_API_URL, enhancedData)
+  ]);
+  
+  console.log('[DIRECT SUBMIT] Sheet result:', sheetResult);
+  console.log('[DIRECT SUBMIT] Email result:', emailResult);
+  
+  const success = sheetResult.success || emailResult.success;
+  
+  return {
+    success,
+    message: success 
+      ? 'Your banquet booking request has been received!' 
+      : 'There was an issue submitting your booking. Please try again.'
+  };
 }
 
 /**
- * Direct submission to Google Sheet via server-side proxy
- * Core function that sends data through our proxy to avoid CORS issues
+ * Submit data to Google Sheets via proxy
  */
-async function directSubmit(data: any): Promise<{success: boolean, message: string}> {
+async function submitToSheet(data: any): Promise<{success: boolean, message: string}> {
   try {
-    console.log('[DIRECT SUBMIT] Sending data via proxy:', CORRECT_URL);
-    console.log('[DIRECT SUBMIT] Data:', data);
+    console.log('[SHEET] Sending to:', SHEET_PROXY_URL);
     
-    // Submit through server-side proxy (which forwards to Google Sheet)
-    const response = await fetch(CORRECT_URL, {
+    const response = await fetch(SHEET_PROXY_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json', // Our proxy accepts JSON
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     });
@@ -72,18 +123,50 @@ async function directSubmit(data: any): Promise<{success: boolean, message: stri
     }
     
     const result = await response.json();
-    console.log('[DIRECT SUBMIT] Response:', result);
-    
     return {
       success: result.success === true,
-      message: result.message || 'Form submitted successfully'
+      message: result.message || 'Data saved to sheet'
     };
   } catch (error) {
-    console.error('[DIRECT SUBMIT] Error:', error);
-    
+    console.error('[SHEET] Error:', error);
     return {
       success: false,
-      message: 'Error submitting form. Please try again.'
+      message: 'Failed to save to sheet'
+    };
+  }
+}
+
+/**
+ * Submit data to Email API for sending notifications
+ */
+async function submitToEmailApi(apiUrl: string, data: any): Promise<{success: boolean, message: string}> {
+  try {
+    console.log('[EMAIL API] Sending to:', apiUrl);
+    
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[EMAIL API] Error response:', errorText);
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+    
+    const result = await response.json();
+    return {
+      success: result.success === true,
+      message: result.message || 'Email sent'
+    };
+  } catch (error) {
+    console.error('[EMAIL API] Error:', error);
+    return {
+      success: false,
+      message: 'Failed to send email'
     };
   }
 }
