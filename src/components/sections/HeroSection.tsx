@@ -11,9 +11,9 @@ import { useToast } from "@/hooks/use-toast";
 import type { DateRange } from "react-day-picker";
 
 // Desktop hero images
-import heroLobby from "@/assets/hero/hero_1.webp";
-import heroRooms from "@/assets/hero/hero_2.webp";
-import heroDining from "@/assets/hero/hero_3.webp";
+import heroLobby from "@/assets/hero/hero_1.png";
+import heroRooms from "@/assets/hero/hero_2.png";
+import heroDining from "@/assets/hero/hero_3.png";
 
 // Mobile hero images
 import heroLobbyMobile from "@/assets/hero/hero_1_mobile.png";
@@ -36,8 +36,8 @@ const slides = [
   {
     desktopImage: heroDining,
     mobileImage: heroDiningMobile,
-    title: "Exceptional Dining Experience",
-    subtitle: "Taste the finest cuisine at Maharana Thal"
+    title: "A Regal Setting for Memorable Moments",
+    subtitle: "Celebrate weddings, receptions, and corporate gatherings in an atmosphere of grace and grandeur."
   },
 ];
 
