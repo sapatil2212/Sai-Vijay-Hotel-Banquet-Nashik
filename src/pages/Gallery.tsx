@@ -10,6 +10,9 @@ import heroLobby from "@/assets/hotel/hotel1.webp";
 
 import Banquet1 from "@/assets/banquet/banquet.webp";
 import Banquet2 from "@/assets/banquet/banquet2.webp";
+import Banquet3 from "@/assets/banquet/banquet3.webp";
+import Banquet4 from "@/assets/banquet/banquet4.webp";
+import Banquet5 from "@/assets/banquet/banquet5.webp";
 import Hotel1 from "@/assets/hotel/hotel1.webp";
 import Hotel2 from "@/assets/hotel/hotel2.webp";
 import Hotel3 from "@/assets/hotel/hotel3.webp";
@@ -35,6 +38,10 @@ const images = [
   { src: Deluxe2, alt: "Premium Deluxe Room", category: "Rooms" },
   { src: Hotel3, alt: "Hotel Reception", category: "Hotel" },
   { src: Banquet2, alt: "Wedding Reception Hall", category: "Events" },
+  { src: Banquet3, alt: "Wedding Reception Hall", category: "Events" },
+  { src: Banquet4, alt: "Wedding Reception Hall", category: "Events" },
+  { src: Banquet5, alt: "Wedding Reception Hall", category: "Events" },
+
   { src: Restaurant2, alt: "Restaurant Interior", category: "Restaurant" },
   { src: Suite2, alt: "Luxury Suite", category: "Rooms" },
   { src: Hotel4, alt: "Hotel Facilities", category: "Hotel" },
