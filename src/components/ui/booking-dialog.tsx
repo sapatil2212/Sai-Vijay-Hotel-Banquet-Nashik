@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
+import { submitRoomBooking } from "@/lib/api/formService";
+import { directRoomSubmit } from "@/lib/api/direct-submit";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -90,31 +92,22 @@ export function BookingDialog({
     setIsSubmitting(true);
     
     try {
-      // Send booking data to API endpoint
-      const response = await fetch('/api/booking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      });
-
-      if (!response.ok) {
-        // Handle non-200 responses
-        const errorText = await response.text();
-        console.error(`API error (${response.status}):`, errorText);
-        throw new Error(`Server error (${response.status}). Please try again later.`);
-      }
-
-      let data;
-      try {
-        data = await response.json();
-      } catch (jsonError) {
-        console.error('Error parsing JSON response:', jsonError);
-        throw new Error('Invalid response from server. Please try again later.');
-      }
+      // Convert form values to the required RoomBookingData type
+      const bookingData = {
+        ...values,
+        name: values.name || '',
+        email: values.email || '',
+        contactNo: values.contactNo || '',
+        roomType: values.roomType || '',
+        checkInDate: values.checkInDate || new Date(),
+        checkOutDate: values.checkOutDate || new Date(),
+        guests: values.guests || '1'
+      };
       
-      if (data.success) {
+      // ONLY USE ONE SUBMISSION METHOD to prevent duplicate entries
+      const directResult = await directRoomSubmit(bookingData);
+      
+      if (directResult.success) {
         toast({
           title: "Booking Request Sent!",
           description: "We've received your booking request and will contact you shortly.",
@@ -137,7 +130,7 @@ export function BookingDialog({
       } else {
         toast({
           title: "Submission Error",
-          description: data.message || "There was a problem sending your booking request. Please try again.",
+          description: directResult.message || "There was a problem sending your booking request. Please try again.",
           variant: "destructive",
         });
       }

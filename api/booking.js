@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer';
 import { format } from 'date-fns';
+import fetch from 'node-fetch';
+import { FORM_ENDPOINT } from './form-endpoint.js';
 
 function createTransporter() {
   return nodemailer.createTransport({
@@ -37,6 +39,28 @@ export default async function handler(req, res) {
     const bookingData = req.body;
     console.log('Room booking request received:', bookingData);
     
+    // Submit data to Google Sheet via Apps Script
+    try {
+      console.log('Submitting to Google Sheet:', FORM_ENDPOINT);
+      const sheetResponse = await fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+        body: JSON.stringify(bookingData),
+      });
+      
+      if (!sheetResponse.ok) {
+        throw new Error(`HTTP error! Status: ${sheetResponse.status}`);
+      }
+      
+      const sheetResult = await sheetResponse.json();
+      console.log('Google Sheet submission result:', sheetResult);
+    } catch (sheetError) {
+      console.error('Error submitting to Google Sheet:', sheetError);
+      // Continue with email sending even if sheet submission fails
+    }
+    
     // Validate required fields
     const requiredFields = ['name', 'contactNo', 'email', 'guests', 'roomType'];
     const missingFields = requiredFields.filter(field => !bookingData[field]);
@@ -44,7 +68,8 @@ export default async function handler(req, res) {
     if (missingFields.length > 0) {
       return res.status(400).json({
         success: false,
-        message: `Missing required fields: ${missingFields.join(', ')}`
+        message: `Missing required fields: ${missingFields.join(', ')}`,
+        stored: false
       });
     }
 
@@ -115,13 +140,15 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: 'Booking request received successfully. We will contact you shortly.'
+      message: 'Booking request received successfully. We will contact you shortly.',
+      stored: true
     });
   } catch (error) {
     console.error('Error processing booking request:', error);
     return res.status(500).json({
       success: false,
-      message: 'Internal server error'
+      message: 'Internal server error',
+      stored: false
     });
   }
 };

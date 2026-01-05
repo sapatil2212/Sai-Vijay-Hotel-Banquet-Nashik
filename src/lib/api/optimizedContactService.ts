@@ -29,10 +29,14 @@ export const submitContactForm = async (formData: ContactFormData): Promise<{ su
       ]);
     };
 
-    // Send data to server-side proxy (which forwards to Google Sheet) in parallel with API call
+    // Send data directly to Google Sheet in parallel with API call
     // This ensures data is stored even if the email sending fails
-    // Using server-side proxy avoids CORS issues with Google Apps Script
-    const sheetProxyUrl = '/api/sheet-proxy';
+    const sheetUrl = import.meta.env.VITE_WEB_APP_SHEET_URL;
+    
+    if (!sheetUrl) {
+      console.error('VITE_WEB_APP_SHEET_URL is not defined in environment variables');
+      throw new Error('Google Sheet URL is not configured');
+    }
 
     // Start both requests in parallel
     const [apiResponse, sheetResponse] = await Promise.all([
@@ -48,15 +52,15 @@ export const submitContactForm = async (formData: ContactFormData): Promise<{ su
         return new Response(JSON.stringify({ success: false, message: 'Email API request failed' }));
       }),
       
-      // Server-side proxy request for Google Sheet storage
-      fetchWithTimeout(sheetProxyUrl, {
+      // Direct Google Sheet request for data storage
+      fetchWithTimeout(sheetUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'text/plain',
         },
         body: JSON.stringify(enhancedFormData),
       }, 8000).catch(error => {
-        console.error('Google Sheet proxy request failed:', error);
+        console.error('Google Sheet request failed:', error);
         return new Response(JSON.stringify({ success: false, message: 'Sheet storage failed' }));
       })
     ]);

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Sheets Integration Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .test-section {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .result {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      max-height: 200px;
+      overflow: auto;
+    }
+    button {
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .success { color: green; }
+    .error { color: red; }
+    .pending { color: orange; }
+  </style>
+</head>
+<body>
+  <h1>Google Sheets Integration Test</h1>
+  
+  <div class="test-section">
+    <h2>1. Check Environment Variables</h2>
+    <p>Checking if the Google Sheets URL is available in the environment...</p>
+    <button id="check-env">Check Environment</button>
+    <div id="env-result" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>2. Test Direct API Call</h2>
+    <p>Sending test data directly to the Google Sheet URL...</p>
+    <button id="test-api">Test Direct API Call</button>
+    <div id="api-result" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>3. Test with CORS Proxy</h2>
+    <p>Testing with a CORS proxy to bypass potential CORS issues...</p>
+    <button id="test-cors-proxy">Test With CORS Proxy</button>
+    <div id="proxy-result" class="result"></div>
+  </div>
+
+  <script>
+    // Helper function for formatting output
+    function formatOutput(prefix, data) {
+      return `${prefix}:\n${typeof data === 'object' ? JSON.stringify(data, null, 2) : data}`;
+    }
+
+    // Test 1: Check Environment
+    document.getElementById('check-env').addEventListener('click', () => {
+      const resultDiv = document.getElementById('env-result');
+      resultDiv.innerHTML = '<span class="pending">Checking...</span>';
+
+      try {
+        const sheetUrl = import.meta.env.VITE_WEB_APP_SHEET_URL;
+        if (sheetUrl) {
+          resultDiv.innerHTML = `<span class="success">SUCCESS</span>\n${formatOutput('Sheet URL found', sheetUrl)}`;
+        } else {
+          resultDiv.innerHTML = `<span class="error">ERROR</span>\nEnvironment variable VITE_WEB_APP_SHEET_URL is not defined`;
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `<span class="error">ERROR</span>\n${formatOutput('Error accessing environment variable', error.message)}`;
+      }
+    });
+
+    // Test 2: Direct API Call
+    document.getElementById('test-api').addEventListener('click', async () => {
+      const resultDiv = document.getElementById('api-result');
+      resultDiv.innerHTML = '<span class="pending">Testing direct API call...</span>';
+
+      try {
+        const sheetUrl = import.meta.env.VITE_WEB_APP_SHEET_URL;
+        if (!sheetUrl) {
+          resultDiv.innerHTML = `<span class="error">ERROR</span>\nEnvironment variable VITE_WEB_APP_SHEET_URL is not defined`;
+          return;
+        }
+
+        const testData = {
+          name: "Browser Integration Test",
+          email: "browser-test@example.com",
+          mobile: "9876543210",
+          message: "This is a test submission from the browser",
+          formType: "browser_test",
+          timestamp: new Date().toISOString()
+        };
+
+        console.log('Sending test data:', testData);
+        console.log('To URL:', sheetUrl);
+
+        const response = await fetch(sheetUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain',
+          },
+          body: JSON.stringify(testData),
+          mode: 'cors' // Try with CORS mode
+        });
+
+        const responseText = await response.text();
+        let resultText = formatOutput('Response status', response.status);
+        
+        try {
+          const jsonResponse = JSON.parse(responseText);
+          resultText += '\n\n' + formatOutput('Parsed JSON response', jsonResponse);
+        } catch (e) {
+          resultText += '\n\n' + formatOutput('Raw response (not JSON)', responseText);
+        }
+
+        resultDiv.innerHTML = `<span class="${response.ok ? 'success' : 'error'}">${response.ok ? 'SUCCESS' : 'ERROR'}</span>\n${resultText}`;
+      } catch (error) {
+        resultDiv.innerHTML = `<span class="error">ERROR</span>\n${formatOutput('Error during API call', error.message)}`;
+        console.error('API call error:', error);
+      }
+    });
+
+    // Test 3: With CORS Proxy
+    document.getElementById('test-cors-proxy').addEventListener('click', async () => {
+      const resultDiv = document.getElementById('proxy-result');
+      resultDiv.innerHTML = '<span class="pending">Testing with CORS proxy...</span>';
+
+      try {
+        const sheetUrl = import.meta.env.VITE_WEB_APP_SHEET_URL;
+        if (!sheetUrl) {
+          resultDiv.innerHTML = `<span class="error">ERROR</span>\nEnvironment variable VITE_WEB_APP_SHEET_URL is not defined`;
+          return;
+        }
+
+        // Public CORS proxy (this is for testing only, not for production use)
+        const corsProxy = "https://corsproxy.io/?";
+        const proxyUrl = corsProxy + encodeURIComponent(sheetUrl);
+
+        const testData = {
+          name: "Browser Proxy Test",
+          email: "proxy-test@example.com",
+          mobile: "9876543210",
+          message: "This is a test submission via a CORS proxy",
+          formType: "proxy_test",
+          timestamp: new Date().toISOString()
+        };
+
+        console.log('Sending test data via proxy:', testData);
+        console.log('To URL:', proxyUrl);
+
+        const response = await fetch(proxyUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain',
+          },
+          body: JSON.stringify(testData)
+        });
+
+        const responseText = await response.text();
+        let resultText = formatOutput('Response status', response.status);
+        
+        try {
+          const jsonResponse = JSON.parse(responseText);
+          resultText += '\n\n' + formatOutput('Parsed JSON response', jsonResponse);
+        } catch (e) {
+          resultText += '\n\n' + formatOutput('Raw response (not JSON)', responseText);
+        }
+
+        resultDiv.innerHTML = `<span class="${response.ok ? 'success' : 'error'}">${response.ok ? 'SUCCESS' : 'ERROR'}</span>\n${resultText}`;
+      } catch (error) {
+        resultDiv.innerHTML = `<span class="error">ERROR</span>\n${formatOutput('Error during proxy API call', error.message)}`;
+        console.error('Proxy API call error:', error);
+      }
+    });
+  </script>
+</body>
+</html>

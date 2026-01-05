@@ -13,7 +13,7 @@ const Banquet = () => {
       <Navbar />
       
       {/* Hero Banner */}
-      <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[40vh] md:h-[60vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={banquetWedding}
@@ -22,12 +22,12 @@ const Banquet = () => {
           />
           <div className="absolute inset-0 bg-hero-overlay" />
         </div>
-        <div className="container-luxury relative z-10 text-center pt-20">
+        <div className="container-luxury relative z-10 text-center pt-16 md:pt-20">
           <motion.span
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-block text-accent text-sm tracking-[0.3em] uppercase font-semibold mb-4"
+            className="inline-block text-accent text-xs md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase font-semibold mb-2 md:mb-4"
           >
             Royal Celebrations
           </motion.span>
@@ -35,7 +35,7 @@ const Banquet = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-primary-foreground mb-6"
+            className="font-serif text-2xl md:text-4xl lg:text-6xl font-semibold text-primary-foreground mb-3 md:mb-6"
           >
             Banquet & Events
           </motion.h1>
@@ -43,7 +43,7 @@ const Banquet = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-primary-foreground/90 text-lg max-w-2xl mx-auto"
+            className="text-primary-foreground/90 text-sm md:text-lg max-w-2xl mx-auto"
           >
             Transform your special occasions into legendary celebrations
           </motion.p>

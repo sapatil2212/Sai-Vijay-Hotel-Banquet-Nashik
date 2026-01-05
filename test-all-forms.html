@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Sai Vijay - Form Testing Suite</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-bottom: 20px; }
+        h2 { color: #555; margin-top: 30px; }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover { background: #45a049; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .test-info {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ffc107;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #f1f1f1;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background: #4CAF50;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .config-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .debug-log {
+            height: 200px;
+            overflow-y: auto;
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+        .log-entry {
+            margin-bottom: 5px;
+            border-bottom: 1px solid #555;
+            padding-bottom: 5px;
+        }
+        .log-time {
+            color: #aaa;
+        }
+        .log-info { color: #4CAF50; }
+        .log-error { color: #f44336; }
+        .log-warning { color: #ff9800; }
+        .date-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        .date-inputs input {
+            flex: 1;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Hotel Sai Vijay Form Testing Suite</h1>
+        
+        <div class="config-section">
+            <h3>Google Apps Script Configuration</h3>
+            <div class="form-group">
+                <label for="scriptUrl">Google Apps Script URL:</label>
+                <input type="text" id="scriptUrl" value="" placeholder="Enter your Google Apps Script URL">
+            </div>
+            <button id="saveConfig" style="background: #2196F3;">Save Configuration</button>
+            <button id="testConnection" style="background: #FF9800; margin-left: 10px;">Test Connection</button>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="contact">Contact Form</div>
+            <div class="tab" data-tab="room">Room Booking</div>
+            <div class="tab" data-tab="banquet">Banquet Booking</div>
+            <div class="tab" data-tab="debug">Debug Console</div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="tab-content active" id="contact-tab">
+            <h2>Contact Form Test</h2>
+            <form id="contactForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contactName">Name *</label>
+                        <input type="text" id="contactName" value="Test User" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactEmail">Email *</label>
+                        <input type="email" id="contactEmail" value="test@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contactMobile">Mobile *</label>
+                        <input type="tel" id="contactMobile" value="9876543210" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactEnquiryType">Enquiry Type</label>
+                        <select id="contactEnquiryType">
+                            <option value="general">General Enquiry</option>
+                            <option value="room">Room Booking</option>
+                            <option value="banquet">Banquet Booking</option>
+                            <option value="feedback">Feedback</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactMessage">Message *</label>
+                    <textarea id="contactMessage" rows="4" required>This is a test message from the contact form test page.</textarea>
+                </div>
+                
+                <button type="submit" id="contactSubmitBtn">Submit Contact Form</button>
+            </form>
+            <div id="contactResult" class="result"></div>
+        </div>
+
+        <!-- Room Booking Form -->
+        <div class="tab-content" id="room-tab">
+            <h2>Room Booking Test</h2>
+            <form id="roomForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="roomName">Name *</label>
+                        <input type="text" id="roomName" value="Test Guest" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="roomEmail">Email *</label>
+                        <input type="email" id="roomEmail" value="test@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="roomContact">Contact Number *</label>
+                        <input type="tel" id="roomContact" value="9876543210" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="roomType">Room Type *</label>
+                        <select id="roomType">
+                            <option value="Standard Room">Standard Room</option>
+                            <option value="Deluxe Room">Deluxe Room</option>
+                            <option value="Executive Suite">Executive Suite</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="roomGuests">Number of Guests *</label>
+                        <select id="roomGuests">
+                            <option value="1">1</option>
+                            <option value="2" selected>2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="roomKids">Children</label>
+                        <select id="roomKids">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="checkInDate">Check-in Date *</label>
+                        <input type="date" id="checkInDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="checkOutDate">Check-out Date *</label>
+                        <input type="date" id="checkOutDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="roomRequests">Special Requests</label>
+                    <textarea id="roomRequests" rows="3">Early check-in if possible.</textarea>
+                </div>
+                
+                <button type="submit" id="roomSubmitBtn">Submit Room Booking</button>
+            </form>
+            <div id="roomResult" class="result"></div>
+        </div>
+
+        <!-- Banquet Booking Form -->
+        <div class="tab-content" id="banquet-tab">
+            <h2>Banquet Booking Test</h2>
+            <form id="banquetForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="banquetName">Name *</label>
+                        <input type="text" id="banquetName" value="Test Event Organizer" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="banquetEmail">Email *</label>
+                        <input type="email" id="banquetEmail" value="test@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="banquetContact">Contact Number *</label>
+                        <input type="tel" id="banquetContact" value="9876543210" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eventType">Event Type *</label>
+                        <select id="eventType">
+                            <option value="Wedding">Wedding</option>
+                            <option value="Birthday">Birthday</option>
+                            <option value="Corporate">Corporate Event</option>
+                            <option value="Reception">Reception</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="banquetGuests">Number of Guests *</label>
+                        <select id="banquetGuests">
+                            <option value="Less than 50">Less than 50</option>
+                            <option value="50-100" selected>50-100</option>
+                            <option value="100-200">100-200</option>
+                            <option value="200+">200+</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fromDate">From Date *</label>
+                        <input type="date" id="fromDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="toDate">To Date *</label>
+                        <input type="date" id="toDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="banquetRequests">Special Requests</label>
+                    <textarea id="banquetRequests" rows="3">Need vegetarian catering options.</textarea>
+                </div>
+                
+                <button type="submit" id="banquetSubmitBtn">Submit Banquet Booking</button>
+            </form>
+            <div id="banquetResult" class="result"></div>
+        </div>
+
+        <!-- Debug Console -->
+        <div class="tab-content" id="debug-tab">
+            <h2>Debug Console</h2>
+            <div class="form-group">
+                <label for="debugLevel">Debug Level:</label>
+                <select id="debugLevel">
+                    <option value="info">Info</option>
+                    <option value="verbose" selected>Verbose</option>
+                </select>
+            </div>
+            <button id="clearLogs" style="background: #f44336;">Clear Logs</button>
+            <div class="debug-log" id="debugLog"></div>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date as default for all date inputs
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        const formatDate = (date) => {
+            return date.toISOString().split('T')[0];
+        };
+        
+        document.getElementById('checkInDate').value = formatDate(today);
+        document.getElementById('checkOutDate').value = formatDate(tomorrow);
+        document.getElementById('fromDate').value = formatDate(today);
+        document.getElementById('toDate').value = formatDate(tomorrow);
+
+        // Debug logging system
+        const debugLog = document.getElementById('debugLog');
+        const debugLevel = document.getElementById('debugLevel');
+        
+        function log(message, type = 'info') {
+            if (debugLevel.value === 'info' && type === 'verbose') {
+                return;
+            }
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.innerHTML = `<span class="log-time">[${timeString}]</span> ${message}`;
+            debugLog.appendChild(logEntry);
+            debugLog.scrollTop = debugLog.scrollHeight;
+            
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+        
+        document.getElementById('clearLogs').addEventListener('click', () => {
+            debugLog.innerHTML = '';
+            log('Logs cleared');
+        });
+
+        // Tab switching
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(tc => tc.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+
+        // Configuration handling
+        const scriptUrlInput = document.getElementById('scriptUrl');
+        const savedUrl = localStorage.getItem('googleScriptUrl');
+        
+        if (savedUrl) {
+            scriptUrlInput.value = savedUrl;
+            log(`Loaded saved Google Script URL: ${savedUrl}`);
+        } else {
+            // Default URL from environment
+            scriptUrlInput.value = "https://script.google.com/macros/s/AKfycbyw6O2rwJR4aIRmOxG6XuFjumfwsiPqlE1sfh1UHA4HP2BtcRlD5rOOptbAIB97fcbYiQ/exec";
+            log('Using default Google Script URL');
+        }
+        
+        document.getElementById('saveConfig').addEventListener('click', () => {
+            const url = scriptUrlInput.value.trim();
+            if (url) {
+                localStorage.setItem('googleScriptUrl', url);
+                log(`Saved Google Script URL: ${url}`, 'info');
+            } else {
+                log('Please enter a valid URL', 'error');
+            }
+        });
+        
+        document.getElementById('testConnection').addEventListener('click', async () => {
+            const url = scriptUrlInput.value.trim();
+            if (!url) {
+                log('Please enter a Google Script URL', 'error');
+                return;
+            }
+            
+            log(`Testing connection to: ${url}`, 'info');
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                log(`Response status: ${response.status}`, 'verbose');
+                
+                const text = await response.text();
+                let data;
+                
+                try {
+                    data = JSON.parse(text);
+                    log('Response parsed successfully', 'verbose');
+                } catch (e) {
+                    log(`Failed to parse response: ${e.message}`, 'error');
+                    data = { rawResponse: text };
+                }
+                
+                if (response.ok) {
+                    log(`✅ Connection successful! Sheet name: ${data.sheetName || 'Unknown'}`, 'info');
+                } else {
+                    log(`❌ Connection failed with status: ${response.status}`, 'error');
+                }
+                
+                log(`Full response: ${JSON.stringify(data)}`, 'verbose');
+                
+            } catch (error) {
+                log(`❌ Connection error: ${error.message}`, 'error');
+            }
+        });
+
+        // Helper function to show results
+        function showResult(elementId, message, type, data = null) {
+            const resultDiv = document.getElementById(elementId);
+            resultDiv.style.display = 'block';
+            resultDiv.className = `result ${type}`;
+            
+            let html = `<strong>${message}</strong>`;
+            if (data) {
+                html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+
+        // Helper function for form submission
+        async function submitFormToSheet(formData, formType) {
+            const url = scriptUrlInput.value.trim();
+            
+            if (!url) {
+                log('No Google Script URL configured', 'error');
+                return { success: false, message: 'No Google Script URL configured' };
+            }
+            
+            // Add form type and timestamp
+            const enhancedData = {
+                ...formData,
+                formType,
+                timestamp: new Date().toISOString()
+            };
+            
+            log(`Submitting ${formType} form to: ${url}`, 'info');
+            log(`Form data: ${JSON.stringify(enhancedData)}`, 'verbose');
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                    body: JSON.stringify(enhancedData)
+                });
+                
+                log(`Response status: ${response.status}`, 'verbose');
+                
+                const text = await response.text();
+                log(`Raw response: ${text}`, 'verbose');
+                
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    log(`Failed to parse response: ${e.message}`, 'error');
+                    return { 
+                        success: false, 
+                        message: 'Invalid response from server',
+                        rawResponse: text
+                    };
+                }
+                
+                if (response.ok && data.success) {
+                    log(`✅ ${formType} form submitted successfully! ID: ${data.id || 'Unknown'}`, 'info');
+                    return data;
+                } else {
+                    log(`❌ ${formType} form submission failed: ${data.message || 'Unknown error'}`, 'error');
+                    return data;
+                }
+                
+            } catch (error) {
+                log(`❌ ${formType} form submission error: ${error.message}`, 'error');
+                return { 
+                    success: false, 
+                    message: `Error: ${error.message}`,
+                    error: error.toString()
+                };
+            }
+        }
+
+        // Contact Form Submission
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('contactSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            const formData = {
+                name: document.getElementById('contactName').value,
+                email: document.getElementById('contactEmail').value,
+                mobile: document.getElementById('contactMobile').value,
+                enquiryType: document.getElementById('contactEnquiryType').value,
+                message: document.getElementById('contactMessage').value
+            };
+            
+            const result = await submitFormToSheet(formData, 'contact');
+            
+            if (result.success) {
+                showResult('contactResult', 'Contact form submitted successfully!', 'success', result);
+            } else {
+                showResult('contactResult', 'Contact form submission failed', 'error', result);
+            }
+            
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Contact Form';
+        });
+
+        // Room Booking Form Submission
+        document.getElementById('roomForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('roomSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            const formData = {
+                name: document.getElementById('roomName').value,
+                email: document.getElementById('roomEmail').value,
+                contactNo: document.getElementById('roomContact').value,
+                roomType: document.getElementById('roomType').value,
+                guests: document.getElementById('roomGuests').value,
+                kids: document.getElementById('roomKids').value,
+                checkInDate: document.getElementById('checkInDate').value,
+                checkOutDate: document.getElementById('checkOutDate').value,
+                specialRequests: document.getElementById('roomRequests').value
+            };
+            
+            const result = await submitFormToSheet(formData, 'room');
+            
+            if (result.success) {
+                showResult('roomResult', 'Room booking submitted successfully!', 'success', result);
+            } else {
+                showResult('roomResult', 'Room booking submission failed', 'error', result);
+            }
+            
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Room Booking';
+        });
+
+        // Banquet Booking Form Submission
+        document.getElementById('banquetForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('banquetSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            const formData = {
+                name: document.getElementById('banquetName').value,
+                email: document.getElementById('banquetEmail').value,
+                contactNo: document.getElementById('banquetContact').value,
+                eventType: document.getElementById('eventType').value,
+                guests: document.getElementById('banquetGuests').value,
+                fromDate: document.getElementById('fromDate').value,
+                toDate: document.getElementById('toDate').value,
+                specialRequests: document.getElementById('banquetRequests').value
+            };
+            
+            const result = await submitFormToSheet(formData, 'banquet');
+            
+            if (result.success) {
+                showResult('banquetResult', 'Banquet booking submitted successfully!', 'success', result);
+            } else {
+                showResult('banquetResult', 'Banquet booking submission failed', 'error', result);
+            }
+            
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Banquet Booking';
+        });
+
+        // Initialize
+        log('Form testing suite initialized', 'info');
+    </script>
+</body>
+</html>

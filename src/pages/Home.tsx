@@ -149,10 +149,11 @@ const heroSlides = [
   };
 
   return (
-    <div className='bg-primary'>
+    <div className='bg-primary overflow-x-hidden w-full max-w-[100vw]'>
       {/* Hero Section with Rounded Corners and Padding */}
-<section className="relative px-4 sm:px-6 lg:px-8 pt-0 pb-8 group "> 
-  <div className="relative h-[60vh] md:h-[85vh] overflow-hidden rounded-3xl ">
+<section className="relative px-4 sm:px-6 lg:px-8 pt-0 pb-8 group overflow-hidden w-full max-w-full">
+
+  <div className="relative h-[60vh] md:h-[85vh] overflow-hidden rounded-3xl w-full">
     {/* Navigation Arrows */}
     <div className="absolute inset-y-0 left-0 z-30 flex items-center justify-center w-12 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
       <button 
@@ -227,8 +228,8 @@ const heroSlides = [
       </div>
     ))}
 
-    {/* Slide Indicators - Always visible */}
-    <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 flex space-x-2">
+    {/* Slide Indicators - Hidden on mobile */}
+    <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 hidden md:flex space-x-2">
       {heroSlides.map((_, index) => (
         <button
           key={index}

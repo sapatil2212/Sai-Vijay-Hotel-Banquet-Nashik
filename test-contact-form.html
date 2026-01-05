@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Contact Form - Google Sheet Integration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-bottom: 20px; }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover { background: #45a049; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .test-info {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Contact Form Submission</h1>
+        
+        <div class="test-info">
+            <strong>Testing Google Apps Script Integration</strong><br>
+            <small>URL: <code id="scriptUrl"></code></small>
+        </div>
+
+        <form id="contactForm">
+            <div class="form-group">
+                <label for="name">Name *</label>
+                <input type="text" id="name" value="Test User" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" value="test@example.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="mobile">Mobile *</label>
+                <input type="tel" id="mobile" value="9876543210" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="enquiryType">Enquiry Type</label>
+                <select id="enquiryType">
+                    <option value="general">General Enquiry</option>
+                    <option value="room">Room Booking</option>
+                    <option value="banquet">Banquet Booking</option>
+                    <option value="feedback">Feedback</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Message *</label>
+                <textarea id="message" rows="4" required>This is a test message from the contact form test page.</textarea>
+            </div>
+            
+            <button type="submit" id="submitBtn">Submit to Google Sheet</button>
+            <button type="button" id="testGetBtn" style="background: #2196F3; margin-left: 10px;">Test GET (Check Script Status)</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyw6O2rwJR4aIRmOxG6XuFjumfwsiPqlE1sfh1UHA4HP2BtcRlD5rOOptbAIB97fcbYiQ/exec";
+        
+        document.getElementById('scriptUrl').textContent = SCRIPT_URL;
+        
+        const resultDiv = document.getElementById('result');
+        
+        function showResult(message, type, data = null) {
+            resultDiv.style.display = 'block';
+            resultDiv.className = type;
+            let html = `<strong>${message}</strong>`;
+            if (data) {
+                html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+            resultDiv.innerHTML = html;
+        }
+
+        // Test GET request to check if script is accessible
+        document.getElementById('testGetBtn').addEventListener('click', async function() {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'Testing...';
+            
+            showResult('Sending GET request to check script status...', 'info');
+            
+            try {
+                console.log('Testing GET request to:', SCRIPT_URL);
+                
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
+                
+                const text = await response.text();
+                console.log('Raw response:', text);
+                
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    data = { rawResponse: text };
+                }
+                
+                if (response.ok) {
+                    showResult('✅ Script is accessible!', 'success', data);
+                } else {
+                    showResult('⚠️ Script responded with error', 'error', data);
+                }
+            } catch (error) {
+                console.error('GET request error:', error);
+                showResult('❌ GET request failed: ' + error.message, 'error', {
+                    errorType: error.name,
+                    errorMessage: error.message,
+                    hint: 'This could be a CORS issue or the script URL is incorrect/not deployed.'
+                });
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Test GET (Check Script Status)';
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            const formData = {
+                formType: 'contact',
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                mobile: document.getElementById('mobile').value,
+                enquiryType: document.getElementById('enquiryType').value,
+                message: document.getElementById('message').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            showResult('Sending POST request...', 'info', { payload: formData });
+            
+            console.log('Submitting form data:', formData);
+            console.log('To URL:', SCRIPT_URL);
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+                
+                const text = await response.text();
+                console.log('Raw response text:', text);
+                
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    data = { rawResponse: text, parseError: e.message };
+                }
+                
+                if (response.ok && data.success) {
+                    showResult('✅ Form submitted successfully! Check your Google Sheet.', 'success', data);
+                } else if (response.ok) {
+                    showResult('⚠️ Request completed but with issues', 'error', data);
+                } else {
+                    showResult('❌ Request failed with status: ' + response.status, 'error', data);
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                showResult('❌ Submission failed: ' + error.message, 'error', {
+                    errorType: error.name,
+                    errorMessage: error.message,
+                    possibleCauses: [
+                        'CORS not properly configured in Apps Script',
+                        'Script not deployed as web app',
+                        'Script URL is incorrect',
+                        'Network/firewall blocking the request'
+                    ]
+                });
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit to Google Sheet';
+            }
+        });
+    </script>
+</body>
+</html>

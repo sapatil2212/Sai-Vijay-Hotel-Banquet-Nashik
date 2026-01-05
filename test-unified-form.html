@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Form Handler Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .form-section {
+            flex: 1;
+            min-width: 300px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+            display: none;
+        }
+        h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hotel Sai Vijay - Form Integration Test</h1>
+    <p>This page tests the integration of all forms with Google Sheets.</p>
+    
+    <div class="form-container">
+        <!-- Contact Form -->
+        <div class="form-section">
+            <h2>Contact Form</h2>
+            <form id="contactForm" data-form-type="contact">
+                <div class="form-group">
+                    <label for="contactName">Name:</label>
+                    <input type="text" id="contactName" value="Test Contact" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactEmail">Email:</label>
+                    <input type="email" id="contactEmail" value="test@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactMobile">Mobile:</label>
+                    <input type="text" id="contactMobile" value="9876543210" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="enquiryType">Enquiry Type:</label>
+                    <select id="enquiryType">
+                        <option value="General">General</option>
+                        <option value="Booking">Booking</option>
+                        <option value="Feedback">Feedback</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactMessage">Message:</label>
+                    <textarea id="contactMessage" rows="3">This is a test contact message</textarea>
+                </div>
+                
+                <button type="submit">Submit Contact Form</button>
+            </form>
+            <div class="response" id="contactResponse"></div>
+        </div>
+        
+        <!-- Room Booking Form -->
+        <div class="form-section">
+            <h2>Room Booking Form</h2>
+            <form id="roomForm" data-form-type="room">
+                <div class="form-group">
+                    <label for="roomName">Name:</label>
+                    <input type="text" id="roomName" value="Test Room Booking" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="roomEmail">Email:</label>
+                    <input type="email" id="roomEmail" value="test@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="roomContact">Contact Number:</label>
+                    <input type="text" id="roomContact" value="9876543210" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="roomType">Room Type:</label>
+                    <select id="roomType">
+                        <option value="Deluxe Room">Deluxe Room</option>
+                        <option value="Super Deluxe Room">Super Deluxe Room</option>
+                        <option value="Family Room">Family Room</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="roomGuests">Number of Guests:</label>
+                    <input type="number" id="roomGuests" value="2" min="1" max="10">
+                </div>
+                
+                <div class="form-group">
+                    <label for="checkInDate">Check-in Date:</label>
+                    <input type="date" id="checkInDate">
+                </div>
+                
+                <div class="form-group">
+                    <label for="checkOutDate">Check-out Date:</label>
+                    <input type="date" id="checkOutDate">
+                </div>
+                
+                <div class="form-group">
+                    <label for="roomRequests">Special Requests:</label>
+                    <textarea id="roomRequests" rows="3">Test room special requests</textarea>
+                </div>
+                
+                <button type="submit">Submit Room Booking</button>
+            </form>
+            <div class="response" id="roomResponse"></div>
+        </div>
+        
+        <!-- Banquet Booking Form -->
+        <div class="form-section">
+            <h2>Banquet Booking Form</h2>
+            <form id="banquetForm" data-form-type="banquet">
+                <div class="form-group">
+                    <label for="banquetName">Name:</label>
+                    <input type="text" id="banquetName" value="Test Banquet Booking" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="banquetEmail">Email:</label>
+                    <input type="email" id="banquetEmail" value="test@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="banquetContact">Contact Number:</label>
+                    <input type="text" id="banquetContact" value="9876543210" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="eventType">Event Type:</label>
+                    <select id="eventType">
+                        <option value="Wedding">Wedding</option>
+                        <option value="Reception">Reception</option>
+                        <option value="Birthday">Birthday</option>
+                        <option value="Corporate">Corporate</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="banquetGuests">Number of Guests:</label>
+                    <input type="number" id="banquetGuests" value="50" min="10" max="500">
+                </div>
+                
+                <div class="form-group">
+                    <label for="fromDate">From Date:</label>
+                    <input type="date" id="fromDate">
+                </div>
+                
+                <div class="form-group">
+                    <label for="toDate">To Date:</label>
+                    <input type="date" id="toDate">
+                </div>
+                
+                <div class="form-group">
+                    <label for="banquetRequests">Special Requests:</label>
+                    <textarea id="banquetRequests" rows="3">Test banquet special requests</textarea>
+                </div>
+                
+                <button type="submit">Submit Banquet Booking</button>
+            </form>
+            <div class="response" id="banquetResponse"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Set default dates for forms
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today as default for all date inputs
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+            
+            // Format dates as YYYY-MM-DD
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            // Set check-in/from date to today
+            document.getElementById('checkInDate').value = formatDate(today);
+            document.getElementById('fromDate').value = formatDate(today);
+            
+            // Set check-out/to date to tomorrow
+            document.getElementById('checkOutDate').value = formatDate(tomorrow);
+            document.getElementById('toDate').value = formatDate(tomorrow);
+        });
+        
+        // Handle form submissions
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formType = this.getAttribute('data-form-type');
+                const responseDiv = document.getElementById(`${formType}Response`);
+                responseDiv.style.display = 'block';
+                responseDiv.textContent = 'Sending request...';
+                
+                // Prepare data based on form type
+                let formData = {};
+                
+                if (formType === 'contact') {
+                    formData = {
+                        name: document.getElementById('contactName').value,
+                        email: document.getElementById('contactEmail').value,
+                        mobile: document.getElementById('contactMobile').value,
+                        enquiryType: document.getElementById('enquiryType').value,
+                        message: document.getElementById('contactMessage').value,
+                        formType: 'contact'
+                    };
+                } else if (formType === 'room') {
+                    formData = {
+                        name: document.getElementById('roomName').value,
+                        email: document.getElementById('roomEmail').value,
+                        contactNo: document.getElementById('roomContact').value,
+                        roomType: document.getElementById('roomType').value,
+                        guests: document.getElementById('roomGuests').value,
+                        checkInDate: document.getElementById('checkInDate').value,
+                        checkOutDate: document.getElementById('checkOutDate').value,
+                        specialRequests: document.getElementById('roomRequests').value,
+                        formType: 'room'
+                    };
+                } else if (formType === 'banquet') {
+                    formData = {
+                        name: document.getElementById('banquetName').value,
+                        email: document.getElementById('banquetEmail').value,
+                        contactNo: document.getElementById('banquetContact').value,
+                        eventType: document.getElementById('eventType').value,
+                        guests: document.getElementById('banquetGuests').value,
+                        fromDate: document.getElementById('fromDate').value,
+                        toDate: document.getElementById('toDate').value,
+                        specialRequests: document.getElementById('banquetRequests').value,
+                        formType: 'banquet'
+                    };
+                }
+                
+                // Add timestamp for tracking
+                formData.timestamp = new Date().toISOString();
+                
+                try {
+                    // First try to use our API endpoint
+                    let response;
+                    try {
+                        response = await fetch('/api/form-handler', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(formData),
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`API endpoint error: ${response.status}`);
+                        }
+                    } catch (apiError) {
+                        console.log('API endpoint failed, trying direct Google Sheet submission:', apiError);
+                        
+                        // If API endpoint fails, try direct submission to Google Sheet
+                        response = await fetch('https://script.google.com/macros/s/AKfycbx-vS7ysktxcPPXhFmPm_BaRUoR0g0bnQtuJQxD0meRukiGy2IN97_TUk6I1PS8I75l/exec', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(formData),
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                    }
+                    
+                    const result = await response.json();
+                    responseDiv.textContent = 'Response:\n' + JSON.stringify(result, null, 2);
+                    
+                } catch (error) {
+                    responseDiv.textContent = 'Error:\n' + error.message;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

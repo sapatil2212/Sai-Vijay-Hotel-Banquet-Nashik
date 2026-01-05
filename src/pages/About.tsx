@@ -37,7 +37,7 @@ const About = () => {
       <Navbar />
       
       {/* Hero Banner */}
-      <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[40vh] md:h-[60vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={heroLobby}
@@ -46,12 +46,12 @@ const About = () => {
           />
           <div className="absolute inset-0 bg-hero-overlay" />
         </div>
-        <div className="container-luxury relative z-10 text-center pt-20">
+        <div className="container-luxury relative z-10 text-center pt-16 md:pt-20">
           <motion.span
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-block text-accent text-sm tracking-[0.3em] uppercase font-semibold mb-4"
+            className="inline-block text-accent text-xs md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase font-semibold mb-2 md:mb-4"
           >
             Our Story
           </motion.span>
@@ -59,7 +59,7 @@ const About = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-primary-foreground"
+            className="font-serif text-2xl md:text-4xl lg:text-6xl font-semibold text-primary-foreground"
           >
             About Sai Vijay
           </motion.h1>

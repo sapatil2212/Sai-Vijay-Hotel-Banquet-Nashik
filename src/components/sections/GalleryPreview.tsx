@@ -66,7 +66,7 @@ const GalleryPreview = () => {
         >
           <Link
             to="/gallery"
-            className="inline-flex items-center gap-2 text-primary font-semibold hover:text-accent transition-colors duration-300"
+            className="inline-flex items-center gap-2 px-6 py-2.5 md:px-8 md:py-3 rounded-lg text-sm md:text-base font-medium bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:shadow-lg transition-all duration-300"
           >
             View Full Gallery
             <motion.span

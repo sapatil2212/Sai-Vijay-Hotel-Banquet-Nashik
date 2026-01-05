@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
+import { submitBanquetBooking } from "@/lib/api/formService";
+import { directBanquetSubmit } from "@/lib/api/direct-submit";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -111,37 +113,23 @@ export function BanquetBookingDialog({
     setIsSubmitting(true);
     
     try {
-      // Add banquet hall info to the form data
+      // Convert form values to the required BanquetBookingData type
       const banquetData = {
         ...values,
-        bookingType: "Banquet Hall",
+        name: values.name || '',
+        email: values.email || '',
+        contactNo: values.contactNo || '',
+        eventType: values.eventType || '',
+        fromDate: values.fromDate || new Date(),
+        toDate: values.toDate || new Date(),
+        guests: values.guests || '1',
+        specialRequests: values.specialRequirements
       };
       
-      // Send booking data to API endpoint
-      const response = await fetch('/api/banquet-booking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      });
-
-      if (!response.ok) {
-        // Handle non-200 responses
-        const errorText = await response.text();
-        console.error(`API error (${response.status}):`, errorText);
-        throw new Error(`Server error (${response.status}). Please try again later.`);
-      }
-
-      let data;
-      try {
-        data = await response.json();
-      } catch (jsonError) {
-        console.error('Error parsing JSON response:', jsonError);
-        throw new Error('Invalid response from server. Please try again later.');
-      }
+      // ONLY use direct submission to prevent duplicate entries
+      const directResult = await directBanquetSubmit(banquetData);
       
-      if (data.success) {
+      if (directResult.success) {
         toast({
           title: "Event Booking Request Sent!",
           description: "We've received your event booking request and will contact you shortly to confirm details.",
@@ -153,6 +141,8 @@ export function BanquetBookingDialog({
           contactNo: "",
           email: "",
           eventType: "",
+          fromDate: undefined,
+          toDate: undefined,
           guests: "",
           specialRequirements: "",
         });
@@ -161,7 +151,7 @@ export function BanquetBookingDialog({
       } else {
         toast({
           title: "Submission Error",
-          description: data.message || "There was a problem sending your event booking request. Please try again.",
+          description: directResult.message || "There was a problem sending your event booking request. Please try again.",
           variant: "destructive",
         });
       }

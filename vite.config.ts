@@ -24,6 +24,87 @@ export default defineConfig(({ mode }) => ({
     {
       name: 'api-handler',
       configureServer(server) {
+        // Handle sheet-proxy for local development (forwards to Google Apps Script)
+        server.middlewares.use('/api/sheet-proxy', async (req, res) => {
+          if (req.method === 'OPTIONS') {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+            res.statusCode = 200;
+            return res.end();
+          }
+          
+          if (req.method === 'POST') {
+            let body = '';
+            req.on('data', chunk => {
+              body += chunk.toString();
+            });
+            
+            req.on('end', async () => {
+              try {
+                const formData = body ? JSON.parse(body) : {};
+                console.log('[SHEET PROXY] Received data:', formData);
+                
+                // Get the Google Sheet URL from environment variables
+                const sheetUrl = process.env.GOOGLE_SHEET_DEPLOY_URL || 
+                                 process.env.VITE_WEB_APP_SHEET_URL;
+                
+                if (!sheetUrl) {
+                  console.error('[SHEET PROXY] Missing Google Sheet URL');
+                  res.statusCode = 500;
+                  res.setHeader('Content-Type', 'application/json');
+                  return res.end(JSON.stringify({
+                    success: false,
+                    message: 'Google Sheet URL not configured'
+                  }));
+                }
+                
+                console.log('[SHEET PROXY] Forwarding to:', sheetUrl);
+                
+                // Forward to Google Apps Script
+                const response = await fetch(sheetUrl, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'text/plain',
+                  },
+                  body: JSON.stringify(formData),
+                  redirect: 'follow',
+                });
+                
+                const responseText = await response.text();
+                console.log('[SHEET PROXY] Response:', responseText);
+                
+                let data;
+                try {
+                  data = JSON.parse(responseText);
+                } catch (e) {
+                  data = { success: true, message: 'Data sent to Google Sheet', rawResponse: responseText };
+                }
+                
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify(data));
+              } catch (error) {
+                console.error('[SHEET PROXY] Error:', error);
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({
+                  success: false,
+                  message: 'Error processing request',
+                  error: error.message
+                }));
+              }
+            });
+          } else {
+            res.statusCode = 405;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({
+              success: false,
+              message: 'Method not allowed'
+            }));
+          }
+        });
+        
         // Handle contact form submissions
         server.middlewares.use('/api/contact-mock', (req, res) => {
           if (req.method === 'POST') {
