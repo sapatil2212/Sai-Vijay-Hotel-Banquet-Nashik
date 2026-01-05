@@ -4,14 +4,14 @@ import { FaWhatsapp } from 'react-icons/fa';
 
 const FloatingActions: React.FC = () => {
   const handleWhatsApp = () => {
-    const phoneNumber = '919130070701';
+    const phoneNumber = '918378064999';
     const message = 'Hello! I would like to inquire about Hotel Sai Vijay services.';
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
   const handleCall = () => {
-    window.location.href = 'tel:+919130070701';
+    window.location.href = 'tel:+918378064999';
   };
 
   return (
