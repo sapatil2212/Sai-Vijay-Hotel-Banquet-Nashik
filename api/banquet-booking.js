@@ -9,7 +9,7 @@ const HOTEL_INFO = {
   email: 'saivijaynasik@gmail.com',
   address: '309, 1, Pathardi Phata, Near Taj Gateway, Next to Indoline Furniture, Ambad Link Road, Ambad, Nashik - 422 010',
   website: 'https://hotelsaivijay.com',
-  logo: 'https://sai-vijay-hotel-banquet-nashik.vercel.app/assets/email-logo.png',
+  logo: 'https://sai-vijay-hotel-banquet-nashik.vercel.app/email-logo.png',
   social: {
     facebook: 'https://www.facebook.com/saivijayhotels',
     twitter: 'https://x.com/hotelsaivijay1',
@@ -20,14 +20,24 @@ const HOTEL_INFO = {
 };
 
 function createTransporter() {
+  console.log('Email config:', {
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    user: process.env.EMAIL_USER ? '***configured***' : 'NOT SET',
+    pass: process.env.EMAIL_PASS ? '***configured***' : 'NOT SET',
+  });
+
   return nodemailer.createTransport({
     host: process.env.EMAIL_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.EMAIL_PORT || '587'),
-    secure: false,
+    secure: process.env.EMAIL_PORT === '465',
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
   });
 }
 

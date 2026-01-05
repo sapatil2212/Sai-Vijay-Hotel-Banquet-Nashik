@@ -8,8 +8,9 @@ const HOTEL_INFO = {
   email: 'saivijaynasik@gmail.com',
   address: '309, 1, Pathardi Phata, Near Taj Gateway, Next to Indoline Furniture, Ambad Link Road, Ambad, Nashik - 422 010',
   website: 'https://hotelsaivijay.com',
-  // Logo hosted on the website
-  logo: 'https://sai-vijay-hotel-banquet-nashik.vercel.app/assets/email-logo.png',
+  // Use a reliable image hosting service for email logos
+  // Option 1: Use the deployed site URL
+  logo: 'https://sai-vijay-hotel-banquet-nashik.vercel.app/email-logo.png',
   // Social media links
   social: {
     facebook: 'https://www.facebook.com/saivijayhotels',
@@ -21,14 +22,28 @@ const HOTEL_INFO = {
 };
 
 function createTransporter() {
+  // Log environment variables (without sensitive data)
+  console.log('Email config:', {
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    user: process.env.EMAIL_USER ? '***configured***' : 'NOT SET',
+    pass: process.env.EMAIL_PASS ? '***configured***' : 'NOT SET',
+    from: process.env.EMAIL_FROM,
+    bcc: process.env.EMAIL_BCC
+  });
+
   return nodemailer.createTransport({
     host: process.env.EMAIL_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.EMAIL_PORT || '587'),
-    secure: false,
+    secure: process.env.EMAIL_PORT === '465', // true for 465, false for other ports
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
+    // Add connection timeout for serverless
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
   });
 }
 
@@ -91,6 +106,16 @@ export default async function handler(req, res) {
 
     console.log('Creating email transporter...');
     const transporter = createTransporter();
+
+    // Verify transporter connection
+    try {
+      console.log('Verifying SMTP connection...');
+      await transporter.verify();
+      console.log('SMTP connection verified successfully');
+    } catch (verifyError) {
+      console.error('SMTP verification failed:', verifyError.message);
+      // Continue anyway - some SMTP servers don't support verify
+    }
 
     // Admin email template
     const adminHtml = `
@@ -163,32 +188,64 @@ export default async function handler(req, res) {
       </div>
     `;
 
-    console.log('Sending admin email...');
+    let adminEmailSent = false;
+    let guestEmailSent = false;
+
     // Send email to admin with BCC
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER,
-      bcc: process.env.EMAIL_BCC,
-      subject: `New Enquiry: ${enquiryType} from ${name}`,
-      html: adminHtml
-    });
-    console.log('Admin email sent successfully');
+    try {
+      console.log('Sending admin email to:', process.env.EMAIL_USER);
+      const adminResult = await transporter.sendMail({
+        from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+        to: process.env.EMAIL_USER,
+        bcc: process.env.EMAIL_BCC,
+        subject: `New Enquiry: ${enquiryType} from ${name}`,
+        html: adminHtml
+      });
+      console.log('Admin email sent:', adminResult.messageId);
+      adminEmailSent = true;
+    } catch (adminError) {
+      console.error('Failed to send admin email:', adminError.message);
+    }
 
-    console.log('Sending guest email to:', email);
     // Send confirmation to guest
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
-      to: email,
-      subject: `Thank You for Contacting ${HOTEL_INFO.name}`,
-      html: guestHtml
-    });
-    console.log('Guest email sent successfully');
+    try {
+      console.log('Sending guest email to:', email);
+      const guestResult = await transporter.sendMail({
+        from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+        to: email,
+        subject: `Thank You for Contacting ${HOTEL_INFO.name}`,
+        html: guestHtml
+      });
+      console.log('Guest email sent:', guestResult.messageId);
+      guestEmailSent = true;
+    } catch (guestError) {
+      console.error('Failed to send guest email:', guestError.message);
+    }
 
-    return res.status(200).json({ success: true, message: 'Your message has been sent successfully!' });
+    // Close the transporter
+    transporter.close();
+
+    if (adminEmailSent || guestEmailSent) {
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Your message has been sent successfully!',
+        emailsSent: { admin: adminEmailSent, guest: guestEmailSent }
+      });
+    } else {
+      return res.status(500).json({ 
+        success: false, 
+        message: 'Failed to send emails. Please try again or contact us directly.',
+        emailsSent: { admin: adminEmailSent, guest: guestEmailSent }
+      });
+    }
 
   } catch (error) {
     console.error('Contact form error:', error);
-    console.error('Error details:', error.message);
-    return res.status(500).json({ success: false, message: 'Failed to send message. Please try again.' });
+    console.error('Error stack:', error.stack);
+    return res.status(500).json({ 
+      success: false, 
+      message: 'Failed to send message. Please try again.',
+      error: error.message 
+    });
   }
 }
