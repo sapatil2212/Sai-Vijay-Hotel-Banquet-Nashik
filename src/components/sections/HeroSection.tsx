@@ -75,9 +75,9 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative">
+    <section className="relative overflow-x-hidden w-full">
       {/* Hero Content Area */}
-      <div className="relative h-[100vh] min-h-[600px] flex items-center overflow-hidden bg-black">
+      <div className="relative h-[100vh] min-h-[600px] w-full flex items-center overflow-hidden bg-black max-w-[100vw]">
         {/* Background Images with Black Fade Transition */}
         <AnimatePresence mode="wait">
 
@@ -87,10 +87,10 @@ const HeroSection = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.2 }}
-            className="absolute inset-0"
+            className="absolute inset-0 w-full h-full"
           >
             {/* Mobile Image (hidden on desktop) */}
-            <div className="md:hidden">
+            <div className="md:hidden w-full h-full">
               <img
                 src={slides[currentSlide].mobileImage}
                 alt={slides[currentSlide].title}
@@ -99,7 +99,7 @@ const HeroSection = () => {
             </div>
             
             {/* Desktop Image (hidden on mobile) */}
-            <div className="hidden md:block">
+            <div className="hidden md:block w-full h-full">
               <img
                 src={slides[currentSlide].desktopImage}
                 alt={slides[currentSlide].title}
@@ -111,15 +111,15 @@ const HeroSection = () => {
         </AnimatePresence>
 
         {/* Content */}
-        <div className="relative z-20 flex items-center justify-center md:justify-start h-full w-full">
-          <div className="max-w-3xl text-center md:text-left px-6 md:px-10 lg:pl-40 -mt-16 md:mt-0">
+        <div className="relative z-20 flex items-center justify-center md:justify-start h-full w-full max-w-full">
+   <div className="max-w-3xl w-full px-6 md:px-10 lg:px-16 text-center md:text-left mt-[-20vh] md:mt-0">
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="mb-3"
             >
-              <span className="inline-block text-accent text-xs md:text-sm tracking-[0.2em] uppercase font-medium bg-black/30 px-4 py-1 rounded-full">
+              <span className="inline-block text-accent text-xs md:text-sm tracking-wide uppercase font-medium bg-black/30 px-4 py-1 rounded-full mx-auto md:mx-0">
                 Welcome to Sai Vijay
               </span>
             </motion.div>
@@ -132,11 +132,11 @@ const HeroSection = () => {
                 exit={{ opacity: 0, y: 30 }}
                 transition={{ duration: 0.6 }}
               >
-                <h1 className="text-2xl md:text-4xl lg:text-5xl font-semibold text-primary-foreground leading-tight mb-3 md:mb-5 mx-auto md:mx-0 drop-shadow-lg">
+                <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-primary-foreground leading-tight mb-3 md:mb-5 mx-auto md:mx-0 drop-shadow-lg break-words max-w-full font-serif">
                   {slides[currentSlide].title}
                 </h1>
 
-                <p className="text-sm md:text-lg text-primary-foreground/90 max-w-2xl leading-relaxed mb-6 md:mb-8 mx-auto md:mx-0 drop-shadow-md">
+                <p className="text-sm md:text-lg text-primary-foreground/90 max-w-2xl leading-relaxed mb-6 md:mb-8 mx-auto md:mx-0 drop-shadow-md break-words">
                   {slides[currentSlide].subtitle}
                 </p>
               </motion.div>
@@ -147,7 +147,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
             >
-              <Button variant="heroShimmer" size="lg" asChild>
+              <Button variant="heroShimmer" size="lg" asChild className="max-w-full mx-auto md:mx-0">
                 <Link to="/contact" className="inline-flex items-center gap-2">
                   Book Now
                   <ArrowRight className="w-4 h-4" />
@@ -155,8 +155,8 @@ const HeroSection = () => {
               </Button>
             </motion.div>
 
-            {/* Slide Indicators */}
-            <div className="flex items-center justify-center md:justify-start gap-3 mt-10">
+            {/* Slide Indicators - Hidden on mobile */}
+            <div className="hidden md:flex items-center justify-center md:justify-start gap-3 mt-10 max-w-full flex-wrap">
               {slides.map((_, index) => (
                 <button
                   key={index}

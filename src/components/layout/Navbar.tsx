@@ -19,6 +19,9 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  
+  // Check if we're on the home/hero page
+  const isHomePage = location.pathname === "/" || location.pathname === "/home";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,18 +40,18 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 w-full ${
         isScrolled
           ? "bg-background/95 backdrop-blur-md shadow-elegant border-b border-border/50"
           : "bg-transparent"
       }`}
     >
-      <nav className={`mx-auto transition-all duration-500 ${
+      <nav className={`mx-auto transition-all duration-500 w-full ${
         isScrolled 
           ? "container-luxury" 
           : "max-w-[95%] mx-auto mt-4"
       }`}>
-        <div className={`flex items-center justify-between transition-all duration-500 ${
+        <div className={`flex items-center justify-between transition-all duration-500 w-full ${
           isScrolled 
             ? "h-20 lg:h-24" 
             : "h-14 lg:h-16 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 lg:px-8"
@@ -104,10 +107,10 @@ const Navbar = () => {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 text-foreground hover:text-accent transition-colors"
+            className={`lg:hidden p-2 transition-all duration-300 z-[110] relative ${isScrolled ? "text-foreground hover:text-accent bg-accent/10 rounded-full" : "text-white hover:text-amber-400"}`}
             aria-label="Toggle menu"
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            <Menu className="w-6 h-6" />
           </button>
         </div>
       </nav>
@@ -116,13 +119,22 @@ const Navbar = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden bg-background/98 backdrop-blur-lg border-t border-border"
+            className="lg:hidden fixed inset-0 z-[101] bg-black flex flex-col justify-center overflow-y-auto top-0 left-0 right-0 bottom-0 h-[100vh] w-[100vw]"
           >
-            <div className="container-luxury py-6 space-y-4">
+            {/* Close Button */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="absolute top-6 right-6 p-2 rounded-full bg-accent text-charcoal hover:bg-accent/90 transition-colors z-[110]"
+              aria-label="Close menu"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="container-luxury py-20 space-y-6 w-full max-w-full">
               {navLinks.map((link, index) => (
                 <motion.div
                   key={link.path}
@@ -132,10 +144,10 @@ const Navbar = () => {
                 >
                   <Link
                     to={link.path}
-                    className={`block py-3 text-lg font-medium transition-colors ${
+                    className={`block py-4 text-xl md:text-2xl font-medium transition-colors text-center ${
                       location.pathname === link.path
                         ? "text-accent"
-                        : "text-foreground hover:text-accent"
+                        : "text-white hover:text-accent"
                     }`}
                   >
                     {link.name}
@@ -146,11 +158,11 @@ const Navbar = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="pt-4 flex flex-col gap-3"
+                className="pt-8 flex flex-col items-center gap-3 w-full"
               >
                 <a 
                   href="tel:+918378064999"
-                  className="flex items-center justify-center gap-2 w-full bg-accent text-charcoal hover:bg-accent/90 px-6 py-3 rounded-full font-medium transition-all duration-300 shadow-md hover:shadow-lg"
+                  className="relative overflow-hidden flex items-center justify-center gap-2 max-w-[250px] w-full mx-auto bg-gold-gradient text-charcoal font-medium px-6 py-3 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent"
                 >
                   <Phone className="w-5 h-5" />
                   <span>+91 83780 64999</span>
