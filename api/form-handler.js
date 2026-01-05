@@ -29,9 +29,19 @@ export default async function handler(req, res) {
     const formData = req.body;
     console.log('Form submission received:', formData);
     
-    // Ensure eventType is preserved for contact forms
+    // Ensure conditional fields are preserved for contact forms
     if (formData.enquiryType === 'Banquet' && formData.eventType) {
       console.log('Processing Banquet enquiry with event type:', formData.eventType);
+    }
+    
+    // Ensure Room Type and Occupancy Type are preserved for Rooms enquiries
+    if (formData.enquiryType === 'Rooms') {
+      if (formData.roomType) {
+        console.log('Processing Rooms enquiry with room type:', formData.roomType);
+      }
+      if (formData.occupancyType) {
+        console.log('Processing Rooms enquiry with occupancy type:', formData.occupancyType);
+      }
     }
 
     // Ensure formType is set for proper categorization in the sheet
