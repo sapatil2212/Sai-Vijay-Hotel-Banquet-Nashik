@@ -5,7 +5,22 @@
  * IMPORTANT: Google Apps Script redirects POST requests, which can cause issues with browser fetch.
  * This proxy handles the redirect properly and forwards the data to Google Sheets.
  */
+
 export default async function handler(req, res) {
+  // Get fetch - use global fetch (Node 18+) or import node-fetch as fallback
+  let fetchFn = globalThis.fetch;
+  if (!fetchFn) {
+    try {
+      const nodeFetch = await import('node-fetch');
+      fetchFn = nodeFetch.default;
+    } catch (e) {
+      console.error('Failed to import node-fetch:', e);
+      return res.status(500).json({
+        success: false,
+        message: 'Server configuration error: fetch not available'
+      });
+    }
+  }
   // Set CORS headers for the API response
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -38,16 +53,24 @@ export default async function handler(req, res) {
     }
 
     console.log('Proxying request to Google Sheet:', sheetUrl);
-    console.log('Request body:', JSON.stringify(req.body));
+    
+    // Safely stringify the request body
+    let bodyData;
+    try {
+      bodyData = typeof req.body === 'string' ? req.body : JSON.stringify(req.body || {});
+    } catch (e) {
+      bodyData = JSON.stringify({});
+    }
+    console.log('Request body:', bodyData);
 
     // Forward the request body to the Google Sheet
     // Using redirect: 'follow' to handle Google's redirect properly
-    const response = await fetch(sheetUrl, {
+    const response = await fetchFn(sheetUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'text/plain', // Use text/plain to avoid CORS preflight on Google's end
       },
-      body: JSON.stringify(req.body),
+      body: bodyData,
       redirect: 'follow', // Important: follow redirects
     });
 
@@ -78,7 +101,8 @@ export default async function handler(req, res) {
     return res.status(500).json({
       success: false,
       message: 'Error processing request',
-      error: error.message
+      error: error.message,
+      stack: error.stack
     });
   }
 }
