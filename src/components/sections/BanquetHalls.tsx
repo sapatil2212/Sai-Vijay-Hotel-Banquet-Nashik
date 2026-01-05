@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
 import { Users, Sparkles, Calendar } from 'lucide-react';
 import { BanquetBookNowButton } from '@/components/ui/banquet-book-now-button';
-import banquet1 from "@/assets/banquet/1.webp";
-import banquet2 from "@/assets/banquet/2.webp";
-import banquet3 from "@/assets/banquet/3.webp";
+import banquet1 from "@/assets/banquet/banquet.webp";
+import banquet2 from "@/assets/banquet/perl.webp";
+import banquet3 from "@/assets/banquet/lotus.png";
 
 const banquetHalls = [
   {
@@ -83,7 +83,7 @@ const BanquetHalls = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: index * 0.2 }}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
+              className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-2xl transition-all duration-300 border border-gray-100"
             >
               {/* Image */}
               <div className="relative h-56 overflow-hidden group">

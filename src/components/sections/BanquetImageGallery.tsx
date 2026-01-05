@@ -6,12 +6,12 @@ import Line from "../../assets/line.png";
 
 import Image1 from "../../assets/banquet/banquet.webp";
 import Image2 from "../../assets/banquet/banquet2.webp";
-import Image3 from "../../assets/hotel/hotel1.webp";
-import Image4 from "../../assets/hotel/hotel2.webp";
+import Image3 from "../../assets/banquet/banquet3.webp";
+import Image4 from "../../assets/banquet/banquet4.webp";
 import Image5 from "../../assets/hotel/hotel3.webp";
 import Image6 from "../../assets/hotel/hotel4.webp";
-import Image7 from "../../assets/restaurant/1.webp";
-import Image8 from "../../assets/restaurant/2.webp";
+import Image7 from "../../assets/banquet/lotus.png";
+import Image8 from "../../assets/banquet/perl.webp";
 import Image9 from "../../assets/restaurant/3.webp";
 import Image10 from "../../assets/restaurant/4.webp";
 import Image11 from "../../assets/suites/5.webp";
