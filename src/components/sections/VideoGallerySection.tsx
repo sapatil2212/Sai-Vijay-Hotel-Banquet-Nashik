@@ -1,32 +1,32 @@
-import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Volume2, VolumeX, X, Maximize2 } from 'lucide-react';
+import { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Play, Volume2, VolumeX, X, Maximize2 } from "lucide-react";
 
+/* ==============================
+   VIDEO CARD
+================================ */
 interface VideoCardProps {
   videoId: string;
-  title: string;
-  description: string;
-  onOpenModal: (videoId: string, title: string) => void;
+  onOpenModal: (videoId: string) => void;
 }
 
-const VideoCard = ({ videoId, title, description, onOpenModal }: VideoCardProps) => {
+const VideoCard = ({ videoId, onOpenModal }: VideoCardProps) => {
   const [isHovering, setIsHovering] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  
-  // Create the embed URL with parameters
-  const getEmbedUrl = (autoplay: boolean, muted: boolean) => {
-    return `https://www.youtube.com/embed/${videoId}?autoplay=${autoplay ? 1 : 0}&mute=${muted ? 1 : 0}&controls=0&modestbranding=1&rel=0&showinfo=0&enablejsapi=1`;
-  };
-  
-  // Handle hover state to control video playback
+
+  const getEmbedUrl = (autoplay: boolean, muted: boolean) =>
+    `https://www.youtube.com/embed/${videoId}?autoplay=${autoplay ? 1 : 0}&mute=${
+      muted ? 1 : 0
+    }&controls=0&modestbranding=1&rel=0&showinfo=0&enablejsapi=1`;
+
   const handleMouseEnter = () => {
     setIsHovering(true);
     if (iframeRef.current) {
       iframeRef.current.src = getEmbedUrl(true, isMuted);
     }
   };
-  
+
   const handleMouseLeave = () => {
     setIsHovering(false);
     if (iframeRef.current) {
@@ -53,131 +53,102 @@ const VideoCard = ({ videoId, title, description, onOpenModal }: VideoCardProps)
       onMouseLeave={handleMouseLeave}
     >
       <div className="relative aspect-video bg-black">
-        {/* YouTube iframe */}
+        {/* Video */}
         <iframe
           ref={iframeRef}
-          className="w-full h-full absolute inset-0"
+          className="absolute inset-0 w-full h-full"
           src={getEmbedUrl(false, true)}
-          title={title}
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
-        ></iframe>
-        
-        {/* Overlay when not hovering */}
+        />
+
+        {/* Play icon overlay */}
         {!isHovering && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 z-10">
-            <Play className="w-16 h-16 text-white opacity-80" />
-            <span className="text-white text-lg font-medium mt-4">Hover to play</span>
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
+            <Play className="w-14 h-14 text-white opacity-80" />
           </div>
         )}
-        
-        {/* Controls overlay */}
-        <div 
-          className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300 z-10 ${isHovering ? 'opacity-100' : 'opacity-0'}`}
+
+        {/* Controls */}
+        <div
+          className={`absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300 z-10 ${
+            isHovering ? "opacity-100" : "opacity-0"
+          }`}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex justify-between items-center">
-            <div className="text-white text-sm font-medium line-clamp-1">{title}</div>
-            <div className="flex items-center gap-2">
-              <button 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onOpenModal(videoId, title);
-                }}
-                className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
-                aria-label="Open in fullscreen"
-              >
-                <Maximize2 className="w-4 h-4 text-white" />
-              </button>
-              <button 
-                onClick={toggleMute}
-                className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
-                aria-label={isMuted ? "Unmute" : "Mute"}
-              >
-                {isMuted ? (
-                  <VolumeX className="w-4 h-4 text-white" />
-                ) : (
-                  <Volume2 className="w-4 h-4 text-white" />
-                )}
-              </button>
-            </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => onOpenModal(videoId)}
+              className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition"
+              aria-label="Fullscreen"
+            >
+              <Maximize2 className="w-4 h-4 text-white" />
+            </button>
+
+            <button
+              onClick={toggleMute}
+              className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition"
+              aria-label={isMuted ? "Unmute" : "Mute"}
+            >
+              {isMuted ? (
+                <VolumeX className="w-4 h-4 text-white" />
+              ) : (
+                <Volume2 className="w-4 h-4 text-white" />
+              )}
+            </button>
           </div>
         </div>
-      </div>
-      
-      <div className="p-4 bg-background">
-        <h3 className="text-lg font-semibold text-foreground mb-2">{title}</h3>
-        <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
       </div>
     </motion.div>
   );
 };
 
+/* ==============================
+   VIDEO GALLERY SECTION
+================================ */
 const VideoGallerySection = () => {
   const [modalVideoId, setModalVideoId] = useState<string | null>(null);
-  const [modalTitle, setModalTitle] = useState("");
 
-  const openVideoModal = (videoId: string, title: string) => {
-    setModalVideoId(videoId);
-    setModalTitle(title);
-  };
-
-  const closeVideoModal = () => {
-    setModalVideoId(null);
-  };
   const videos = [
-    {
-      videoId: "r5WhZmRMnh4",
-      title: "Hotel Lobby Tour",
-      description: "Take a virtual tour of our elegant hotel lobby and reception area."
-    },
-    {
-      videoId: "CeZe_nXlyoA",
-      title: "Luxury Suite Experience",
-      description: "Experience the comfort and luxury of our premium suites."
-    },
-    {
-      videoId: "T1W6mt-DlXw",
-      title: "Banquet Hall Showcase",
-      description: "Explore our magnificent banquet hall perfect for weddings and events."
-    },
-    {
-      videoId: "Y10CHZKsEZo",
-      title: "Restaurant & Dining",
-      description: "Discover our exquisite dining experience and culinary delights."
-    }
+    "r5WhZmRMnh4",
+    "CeZe_nXlyoA",
+    "T1W6mt-DlXw",
+    "Y10CHZKsEZo",
   ];
 
   return (
-    <section className="section-padding bg-muted/30">
+    <section className="bg-muted/30 py-10 md:py-14">
       <div className="container-luxury">
-        <div className="text-center mb-12">
-          <span className="inline-block text-accent text-sm tracking-[0.2em] uppercase font-semibold mb-3">
+
+        {/* ✅ SECTION TEXT (KEPT) */}
+        <div className="text-center mb-8 md:mb-12">
+          <span className="inline-block text-accent text-xs md:text-sm tracking-[0.2em] uppercase font-semibold mb-3">
             Virtual Experience
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-foreground mb-4">
+
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-serif font-semibold text-foreground mb-4">
             Video Gallery
           </h2>
-          <p className="text-muted-foreground max-w-3xl mx-auto">
-            Immerse yourself in the Sai Vijay experience through our collection of 360° videos. 
-            Hover over any video to begin playing.
+
+          <p className="text-muted-foreground max-w-3xl mx-auto text-sm md:text-base">
+            Immerse yourself in the Sai Vijay experience through our collection of
+            360° videos. Hover over any video to begin playing.
           </p>
         </div>
 
+        {/* Video Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {videos.map((video, index) => (
+          {videos.map((videoId) => (
             <VideoCard
-              key={video.videoId}
-              videoId={video.videoId}
-              title={video.title}
-              description={video.description}
-              onOpenModal={openVideoModal}
+              key={videoId}
+              videoId={videoId}
+              onOpenModal={setModalVideoId}
             />
           ))}
         </div>
 
-        {/* Video Modal */}
+        {/* Modal */}
         <AnimatePresence>
           {modalVideoId && (
             <motion.div
@@ -185,15 +156,16 @@ const VideoGallerySection = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/95"
-              onClick={closeVideoModal}
+              onClick={() => setModalVideoId(null)}
             >
               <button
-                onClick={closeVideoModal}
-                className="absolute top-6 right-6 w-12 h-12 bg-background/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-accent transition-colors z-10"
-                aria-label="Close modal"
+                onClick={() => setModalVideoId(null)}
+                className="absolute top-6 right-6 w-12 h-12 bg-background/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-accent transition z-10"
+                aria-label="Close"
               >
                 <X className="w-6 h-6 text-primary-foreground" />
               </button>
+
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -205,15 +177,15 @@ const VideoGallerySection = () => {
                 <iframe
                   className="w-full h-full rounded-lg shadow-2xl"
                   src={`https://www.youtube.com/embed/${modalVideoId}?autoplay=1&controls=1&modestbranding=1&rel=0&showinfo=0`}
-                  title={modalTitle}
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                ></iframe>
+                />
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
+
       </div>
     </section>
   );
