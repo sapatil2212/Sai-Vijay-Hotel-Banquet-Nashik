@@ -35,7 +35,7 @@ const VideoSection = () => {
   };
 
   return (
-    <section className="py-16 lg:py-24 bg-background">
+    <section className="py-2 lg:py-5 bg-background">
       <div className="container mx-auto px-6 lg:px-8 xl:px-32">
         <motion.div
           ref={ref}

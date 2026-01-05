@@ -37,7 +37,7 @@ const AboutPreview = () => {
     setCurrentIndex((prev) => (prev + 1) % images.length);
   };
 
-  // Get visible cards (current and next 2 for desktop, only current for mobile)
+  
   const getVisibleCards = () => {
     // For mobile, show only current card
     if (typeof window !== 'undefined' && window.innerWidth < 1024) {
@@ -52,7 +52,7 @@ const AboutPreview = () => {
   };
 
   return (
-    <section className="section-padding bg-background">
+<section className="bg-background py-10 md:py-12">
       <div className="container-luxury">
         <div className="grid lg:grid-cols-[1fr_1.8fr] gap-12 lg:gap-16 items-center">
           {/* Content - Left Side - Reduced Width */}
@@ -68,13 +68,7 @@ const AboutPreview = () => {
               A Legacy of Royal
               <span className="block">Hospitality</span>
             </h2>
-            <div className="flex justify-start mb-6">
-              <img
-                src={Line}
-                alt="Decorative Line"
-                className="w-32 md:w-40"
-              />
-            </div>
+            
             <p className="text-muted-foreground text-sm md:text-md leading-relaxed mb-8">
               Nestled in the heart of the city, Sai Vijay Hotel & Banquet has been the epitome of luxury hospitality for over two decades. Our commitment to excellence, attention to detail, and warm Indian hospitality makes every stay an unforgettable experience.
             </p>

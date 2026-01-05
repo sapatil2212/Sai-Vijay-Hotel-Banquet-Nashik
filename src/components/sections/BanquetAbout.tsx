@@ -13,9 +13,8 @@ import { GiPartyFlags, GiPartyPopper } from "react-icons/gi";
 import { FaGlassCheers, FaParking } from "react-icons/fa";
 import { MdRestaurant } from "react-icons/md";
 import { motion } from "framer-motion";
-import SideImage from "../../assets/banquet/banquet.webp";
+import SideImage from "../../assets/banquet/banquet-page.png";
 import { BanquetBookNowButton } from "@/components/ui/banquet-book-now-button";
-import Line from "@/assets/line.png";
 
 export default function BanquetAbout() {
   const locations = [
@@ -76,7 +75,7 @@ export default function BanquetAbout() {
   ];
 
   return (
-    <div className="py-16 px-4 sm:px-6 lg:px-8 mt-[50px] sm:mt-[80px]">
+    <div className="py-16 px-4 sm:px-6 lg:px-8 mt-[30px] sm:mt-[30px]">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 xl:px-32">
         <div className="grid lg:grid-cols-2 gap-12 items-start font-inter">
           <motion.div
@@ -87,16 +86,10 @@ export default function BanquetAbout() {
             className="order-2 lg:order-1"
           >
             <div className="mb-12">
-              <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-4 font-playfair">
+              <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-2 font-playfair">
                 Sai Vijay Banquet Hall
               </h2>
-              <div className="flex justify-start mb-4">
-                <img
-                  src={Line}
-                  alt="Decorative Line"
-                  className="w-32 md:w-40"
-                />
-              </div>
+             
               <p className="text-sm sm:text-base text-gray-600 mb-2 leading-relaxed">
                 <span className="font-semibold text-gray-800">
                   Where Celebrations Turn Into Lifetime Memories

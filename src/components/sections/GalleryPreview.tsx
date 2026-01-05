@@ -19,7 +19,7 @@ const images = [
 
 const GalleryPreview = () => {
   return (
-    <section className="section-padding bg-background">
+    <section className="bg-background py-8 md:py-8">
       <div className="container-luxury">
         <SectionHeading
           subtitle="Gallery"
