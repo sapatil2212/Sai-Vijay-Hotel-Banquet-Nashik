@@ -258,13 +258,13 @@ const RoomsPreview = () => {
                   <div className="flex space-x-2 sm:space-x-3">
                     <Link 
                       to={`/rooms`}
-                      className="flex-1 text-center bg-transparent border border-accent text-accent hover:bg-accent/5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-medium transition-colors text-xs sm:text-sm"
+                      className="flex-1 text-center bg-transparent border-2 border-amber-600 text-amber-700 hover:bg-amber-50 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-medium transition-colors text-xs sm:text-sm"
                     >
                       View Details
                     </Link>
                     <BookNowButton
                       roomType={room.name}
-                      className="flex-1 text-center justify-center bg-accent hover:bg-accent/90 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-medium transition-colors text-xs sm:text-sm"
+                      className="flex-1 text-center justify-center bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-medium transition-colors text-xs sm:text-sm relative overflow-hidden group"
                     />
                   </div>
                 </div>

@@ -72,10 +72,11 @@ const AboutPreview = () => {
             <p className="text-muted-foreground text-sm md:text-md leading-relaxed mb-8">
               Nestled in the heart of the city, Sai Vijay Hotel & Banquet has been the epitome of luxury hospitality for over two decades. Our commitment to excellence, attention to detail, and warm Indian hospitality makes every stay an unforgettable experience.
             </p>
-            <Button variant="gold" size="lg" asChild className="group">
+            <Button size="lg" asChild className="group bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white relative overflow-hidden transition-all duration-300">
               <Link to="/about" className="inline-flex items-center gap-2">
-                MORE ABOUT US
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-20 group-hover:animate-shimmer"></span>
+                <span className="relative z-10">MORE ABOUT US</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform relative z-10" />
               </Link>
             </Button>
           </motion.div>

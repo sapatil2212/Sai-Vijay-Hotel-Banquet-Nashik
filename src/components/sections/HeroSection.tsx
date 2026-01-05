@@ -147,10 +147,11 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
             >
-              <Button variant="heroShimmer" size="lg" asChild className="max-w-full mx-auto md:mx-0">
+              <Button size="lg" asChild className="max-w-full mx-auto md:mx-0 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white relative overflow-hidden group transition-all duration-300">
                 <Link to="/contact" className="inline-flex items-center gap-2">
-                  Book Now
-                  <ArrowRight className="w-4 h-4" />
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-20 group-hover:animate-shimmer"></span>
+                  <span className="relative z-10">Book Now</span>
+                  <ArrowRight className="w-4 h-4 relative z-10" />
                 </Link>
               </Button>
             </motion.div>
@@ -234,12 +235,12 @@ const HeroSection = () => {
                         </div>
                       </div>
                       <Button 
-                        variant="gold" 
                         size="sm" 
-                        className="w-full mt-2"
+                        className="w-full mt-2 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white relative overflow-hidden group transition-all duration-300"
                         onClick={() => setGuestPopoverOpen(false)}
                       >
-                        Done
+                        <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-20 group-hover:animate-shimmer"></span>
+                        <span className="relative z-10">Done</span>
                       </Button>
                     </div>
                   </PopoverContent>
@@ -283,9 +284,10 @@ const HeroSection = () => {
                 </Popover>
               </div>
 
-              <Button variant="gold" size="lg" className="w-full h-[50px]" onClick={handleExploreRooms}>
-                <span>Explore Rooms</span>
-                <ArrowRight className="w-4 h-4 ml-2" />
+              <Button size="lg" className="w-full h-[50px] bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white relative overflow-hidden group transition-all duration-300" onClick={handleExploreRooms}>
+                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-20 group-hover:animate-shimmer"></span>
+                <span className="relative z-10">Explore Rooms</span>
+                <ArrowRight className="w-4 h-4 ml-2 relative z-10" />
               </Button>
             </div>
           </div>

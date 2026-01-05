@@ -276,15 +276,15 @@ const Rooms = () => {
 
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Button
-                      variant="gold"
                       size="lg"
                       onClick={() => handleRoomSelect(room)}
+                      className="bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white relative overflow-hidden group transition-all duration-300"
                     >
-                      View Details
+                      <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-20 group-hover:animate-shimmer"></span>
+                      <span className="relative z-10">View Details</span>
                     </Button>
                     <BookNowButton
                       roomType={room.name}
-                      variant="elegant"
                       size="lg"
                     />
                   </div>
@@ -389,9 +389,8 @@ const Rooms = () => {
 
               <BookNowButton
                 roomType={selectedRoom.name}
-                variant="gold"
                 size="lg"
-                className="w-full"
+                className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white relative overflow-hidden group transition-all duration-300"
               />
             </div>
           </motion.div>
