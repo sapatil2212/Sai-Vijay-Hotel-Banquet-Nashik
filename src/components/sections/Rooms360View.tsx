@@ -107,7 +107,7 @@ const Rooms360View = () => {
 
       {isModalOpen && currentView && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90"
+          className="fixed inset-0 z-[150] flex items-center justify-center bg-black bg-opacity-90"
           role="dialog"
           aria-modal="true"
         >
