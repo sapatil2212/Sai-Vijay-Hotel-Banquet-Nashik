@@ -9,9 +9,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { MapPin, Phone, Mail, Send, Loader2 } from "lucide-react";
+import MapFallback from "@/components/ui/map-fallback";
 import { FaWhatsapp } from "react-icons/fa";
 import heroLobby from "@/assets/hotel/hotel1.webp";
-import { submitContactForm } from "@/lib/api/contactService";
+import { submitContactForm } from "@/lib/api/formService";
+import { directContactSubmit } from "@/lib/api/direct-submit";
 
 const eventTypes = [
   "Wedding",
@@ -78,10 +80,16 @@ const Contact = () => {
     setIsSubmitting(true);
     
     try {
-      // Submit form data for email and Google Sheets
-      const response = await submitContactForm(formData);
+      // Add timestamp to track when the submission was made
+      const enhancedFormData = {
+        ...formData,
+        timestamp: new Date().toISOString()
+      };
       
-      if (response.success) {
+      // ONLY use direct submission to prevent duplicate entries
+      const directResponse = await directContactSubmit(enhancedFormData);
+      
+      if (directResponse.success) {
         toast({
           title: "Message Sent!",
           description: "Thank you for contacting us. We'll get back to you within 24 hours.",
@@ -93,7 +101,7 @@ const Contact = () => {
       } else {
         toast({
           title: "Submission Error",
-          description: response.message || "There was a problem sending your message. Please try again.",
+          description: directResponse.message || "There was a problem sending your message. Please try again.",
           variant: "destructive",
         });
       }
@@ -114,7 +122,7 @@ const Contact = () => {
       <Navbar />
       
       {/* Hero Banner */}
-      <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={heroLobby}
@@ -123,12 +131,12 @@ const Contact = () => {
           />
           <div className="absolute inset-0 bg-hero-overlay" />
         </div>
-        <div className="container-luxury relative z-10 text-center pt-20">
+        <div className="container-luxury relative z-10 text-center pt-16 md:pt-20">
           <motion.span
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-block text-accent text-sm tracking-[0.3em] uppercase font-semibold mb-4"
+            className="inline-block text-accent text-xs md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase font-semibold mb-2 md:mb-4"
           >
             Get in Touch
           </motion.span>
@@ -293,19 +301,12 @@ const Contact = () => {
               transition={{ duration: 0.8 }}
               className="space-y-6"
             >
-              {/* Map */}
-              <div className="rounded-2xl overflow-hidden border border-gray-100 h-[350px]">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3393.6489024278667!2d73.7474368746868!3d19.962123423558484!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bddeb578da08ac1%3A0xc4928f4d037426fd!2sSai%20Vijay%20Hotel%20And%20Banquet!5e1!3m2!1sen!2sin!4v1767361920131!5m2!1sen!2sin"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Sai Vijay Hotel And Banquet Location"
-                />
-              </div>
+              {/* Map with Fallback */}
+              <MapFallback 
+                address="Office, Ground Floor, Shree Hari Plaza, Abhang Nagar, New Adgaon Naka, Panchavati, Nashik"
+                title="Sai Vijay Hotel And Banquet Location"
+                className="rounded-2xl h-[350px]"
+              />
 
               {/* Contact Card - Combined */}
               <motion.div
