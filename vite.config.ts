@@ -9,9 +9,14 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export default defineConfig(({ mode }) => ({
+  define: {
+    // Make environment variables available to client-side code
+    'import.meta.env.VITE_WEB_APP_SHEET_URL': JSON.stringify(process.env.VITE_WEB_APP_SHEET_URL)
+  },
   server: {
     host: "::",
     port: 8080,
+    historyApiFallback: true,
   },
   plugins: [
     react(),
