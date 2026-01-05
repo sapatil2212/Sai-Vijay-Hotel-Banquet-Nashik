@@ -1,4 +1,5 @@
 import { sendEmail } from './email-config.js';
+import { createEmailFooter } from './email-footer.js';
 import { format } from 'date-fns';
 
 // Hotel contact information
@@ -19,25 +20,8 @@ const HOTEL_INFO = {
 
 // Using centralized email configuration from email-config.js
 
-// Simple email footer
-const emailFooter = `
-  <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center;">
-    <div style="margin-bottom: 15px;">
-      <a href="${HOTEL_INFO.social.facebook}" style="display: inline-block; margin: 0 8px; text-decoration: none;">
-        <img src="https://cdn-icons-png.flaticon.com/24/733/733547.png" alt="Facebook" style="width: 24px; height: 24px;">
-      </a>
-      <a href="${HOTEL_INFO.social.instagram}" style="display: inline-block; margin: 0 8px; text-decoration: none;">
-        <img src="https://cdn-icons-png.flaticon.com/24/2111/2111463.png" alt="Instagram" style="width: 24px; height: 24px;">
-      </a>
-      <a href="${HOTEL_INFO.social.youtube}" style="display: inline-block; margin: 0 8px; text-decoration: none;">
-        <img src="https://cdn-icons-png.flaticon.com/24/1384/1384060.png" alt="YouTube" style="width: 24px; height: 24px;">
-      </a>
-    </div>
-    <p style="color: #888; font-size: 12px; margin: 5px 0;">${HOTEL_INFO.name}</p>
-    <p style="color: #888; font-size: 12px; margin: 5px 0;">${HOTEL_INFO.address}</p>
-    <p style="color: #888; font-size: 12px; margin: 5px 0;">📞 ${HOTEL_INFO.phone1} | ${HOTEL_INFO.phone2}</p>
-  </div>
-`;
+// Use the centralized email footer
+const emailFooter = createEmailFooter(HOTEL_INFO);
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
