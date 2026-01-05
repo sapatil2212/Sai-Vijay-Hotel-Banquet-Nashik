@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import { sendEmail } from './email-config.js';
 import { format } from 'date-fns';
 
 // Hotel contact information
@@ -17,19 +17,7 @@ const HOTEL_INFO = {
   }
 };
 
-function createTransporter() {
-  return nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.EMAIL_PORT || '587'),
-    secure: process.env.EMAIL_PORT === '465',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-    pool: true,
-    maxConnections: 1,
-  });
-}
+// Using centralized email configuration from email-config.js
 
 // Simple email footer
 const emailFooter = `
@@ -138,24 +126,30 @@ export default async function handler(req, res) {
 
     // Send admin email (to admin only)
     console.log('Sending admin email to:', process.env.EMAIL_USER);
-    await transporter.sendMail({
+    const adminResult = await sendEmail({
       from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
       to: process.env.EMAIL_USER,
       bcc: process.env.EMAIL_BCC,
       subject: `Room Booking: ${bookingData.roomType} - ${bookingData.name}`,
       html: adminHtml
     });
+    
+    if (!adminResult.success) {
+      console.error('Admin email failed:', adminResult.error);
+    }
 
     // Send guest email (to guest only)
     console.log('Sending guest email to:', bookingData.email);
-    await transporter.sendMail({
+    const guestResult = await sendEmail({
       from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
       to: bookingData.email,
       subject: `Your Room Booking Request - ${HOTEL_INFO.name}`,
       html: guestHtml
     });
-
-    transporter.close();
+    
+    if (!guestResult.success) {
+      console.error('Guest email failed:', guestResult.error);
+    }
 
     return res.status(200).json({ success: true, message: 'Booking request received successfully.' });
 
