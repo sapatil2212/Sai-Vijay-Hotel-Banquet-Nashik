@@ -4,6 +4,7 @@ import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/layout/ScrollToTop";
 import banquetWedding from "@/assets/banquet/banquet.webp";
 import BanquetAbout from "@/components/sections/BanquetAbout";
+import BanquetHalls from "@/components/sections/BanquetHalls";
 import BanquetImageGallery from "@/components/sections/BanquetImageGallery";
 import Banquet360View from "@/components/sections/Banquet360View";
 
@@ -52,6 +53,9 @@ const Banquet = () => {
 
       {/* About Section */}
       <BanquetAbout />
+
+      {/* Banquet Halls */}
+      <BanquetHalls />
 
       {/* Image Gallery */}
       <BanquetImageGallery />

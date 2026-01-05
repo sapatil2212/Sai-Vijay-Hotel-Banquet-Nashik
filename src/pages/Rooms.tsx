@@ -23,6 +23,9 @@ import {
 import deluxe1 from "@/assets/deluxe/1.webp";
 import deluxe2 from "@/assets/deluxe/2.webp";
 import deluxe3 from "@/assets/deluxe/3.webp";
+import executive1 from "@/assets/premium/premium_1.webp";
+import executive2 from "@/assets/premium/premium_2.webp";
+import executive3 from "@/assets/premium/premium_3.webp";
 import suite1 from "@/assets/suites/2.jpg";
 import suite2 from "@/assets/suites/5.webp";
 import suite3 from "@/assets/suites/6.webp";
@@ -60,6 +63,37 @@ const rooms = [
   },
   {
     id: 2,
+    name: "Executive Room",
+    tagline: "Premium Excellence",
+    description: "Elevate your stay in our Executive Room, designed for discerning travelers who appreciate refined luxury. Featuring premium furnishings, enhanced amenities, and a sophisticated ambiance perfect for both business and leisure.",
+    image: executive1,
+    images: [executive1, executive2, executive3],
+    size: "250 sq ft",
+    capacity: "Sleeps 3",
+    bed: "1 King Bed",
+    amenities: [
+      "Air Conditioning",
+      "Free WiFi",
+      "42-inch LED TV",
+      "Premium Channels",
+      "Premium View",
+      "Premium Mattress",
+      "Egyptian Cotton Sheets",
+      "Work Desk",
+      "Executive Chair",
+      "Rainfall Showerhead",
+      "Premium Toiletries",
+      "Coffee Maker",
+      "Mini Bar",
+      "Laptop Workspace",
+      "Mobile Key Entry",
+      "Daily Housekeeping",
+      "Wheelchair Accessible",
+      "Iron & Ironing Board"
+    ],
+  },
+  {
+    id: 3,
     name: "Premium Suite",
     tagline: "Ultimate Luxury",
     description: "Indulge in spacious luxury with our Premium Suite. Featuring a separate bedroom, sitting area, dining space, and full kitchen. Perfect for extended stays and families seeking the ultimate comfort.",
